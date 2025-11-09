@@ -1,4 +1,3 @@
-```markdown
 # Definição de Arquitetura - Ciclo de Desempenho
 
 **Documento:** Definição de Arquitetura - Ciclo de Desempenho  
@@ -46,5 +45,4 @@ ciclo-desempenho-backend/
 ├── scripts/             # Scripts SQL
 ├── docs/                # Documentação
 └── tests/               # Testes (opcional)
-```
 ```
