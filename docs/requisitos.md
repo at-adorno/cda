@@ -12,10 +12,10 @@
 
 | Nome | Papel | Responsabilidades |
 |------|-------|-------------------|
-| Wanessa | Modeladora de Dados | Modelagem de banco de dados, criação de DER, scripts SQL |
-| Alessandra | Desenvolvedora de Rotas | Endpoints da API, controllers, integração de sistemas |
-| Andre | Lógica de Negócio | Services, regras de negócio, algoritmos |
-| Diciane | Documentação | Swagger, README, manuais de uso |
+| Wanessa Karen | Modeladora de Dados | Modelagem de banco de dados, criação de DER, scripts SQL |
+| Alessandra Santos | Desenvolvedora de Rotas | Endpoints da API, controllers, integração de sistemas |
+| Andre Tavares | Lógica de Negócio | Services, regras de negócio, algoritmos |
+| Diciane Alves | Documentação | Swagger, README, manuais de uso |
 
 ---
 
