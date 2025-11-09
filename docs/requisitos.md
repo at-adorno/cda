@@ -42,8 +42,17 @@ O processo de gestão de desempenho é manual, fragmentado em planilhas e formul
 
 O projeto será considerado bem-sucedido se:
 
-1. Todos envolvidos desempenharem o sue papel
-2. Apresentarem uam solução robusta inicial com possibilidade de expansão
+ 1. Banco de dados funcionando com todas as tabelas
+
+ 2. Pelo menos 7 dos 9 endpoints do gestor implementados
+
+ 3. Tela do colaborador exibindo dados reais
+
+ 4. Importação de CSV funcional para pelo menos uma entidade
+
+ 5. Cálculo de mérito funcionando corretamente
+
+ 6. Sistema rodando sem erros críticos
 
 ---
 
