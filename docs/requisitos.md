@@ -70,9 +70,8 @@ Os requisitos funcionais definem as funcionalidades específicas que o sistema d
 |---|---|---|---|---|
 | RF 1.1 | Manutenção de Ciclo de Desempenho | Deve ser possível criar, ler, atualizar e deletar registros relacionados ao ciclo de desempenho | Alta | O sistema deve permitir criação, consulta, atualização e deleção do ciclo de desempenho. O sistema deve validar campos obrigatórios e evitar duplicidade. |
 | RF 1.2 | Cadastro de Colaboradores | Cadastro e gerenciamento de dados dos colaboradores no sistema | Alta | O sistema deve permitir o cadastro de colaboradores. O sistema deve validar campos obrigatórios e evitar duplicidade. |
-| RF 1.3 | Disparo e Controle de Formulários | O sistema deve disparar automaticamente formulários digitais de avaliação (competências e metas) para o Gestor e o Colaborador (se houver self-assessment) | Alta | Formulários digitais devem ser enviados automaticamente para gestor e colaborador no início do ciclo. Envio deve ser confirmado e registrado no sistema. Formulários devem ser acessíveis para preenchimento via Web ou Mobile. |
-| RF 1.4 | Validação de Preenchimento Mínimo | O sistema deve impedir o envio de qualquer formulário de avaliação sem que todos os campos obrigatórios e pesos mínimos tenham sido preenchidos, garantindo avaliações completas | Alta | O sistema deve impedir envio com campos obrigatórios faltando. Validar pesos mínimos configurados para avaliação. Feedback claro para o usuário indicando campos pendentes. |
-| RF 1.5 | Recomendação de Período de Experiência | O sistema deve, ao final do ciclo de experiência, consolidar as notas e recomendar a continuidade ou desligamento, com base em regras predefinidas pelo RH | Alta | Consolidar notas ao final do ciclo e gerar recomendação automática. Regras configuráveis devem ser aplicadas com transparência. Gestor e RH devem acessar relatórios detalhados com justificativas. |
+| RF 1.3 | Validação de Preenchimento Mínimo | O sistema deve impedir o envio de qualquer formulário de avaliação sem que todos os campos obrigatórios e pesos mínimos tenham sido preenchidos, garantindo avaliações completas | Alta | O sistema deve impedir envio com campos obrigatórios faltando. Validar pesos mínimos configurados para avaliação. Feedback claro para o usuário indicando campos pendentes. |
+| RF 1.4 | Recomendação de Período de Experiência | O sistema deve, ao final do ciclo de experiência, consolidar as notas e recomendar a continuidade ou desligamento, com base em regras predefinidas pelo RH | Alta | Consolidar notas ao final do ciclo e gerar recomendação automática. Regras configuráveis devem ser aplicadas com transparência. Gestor e RH devem acessar relatórios detalhados com justificativas. |
 
 ### RF 2: Cálculo e Progressão Automatizada
 
@@ -87,27 +86,20 @@ Os requisitos funcionais definem as funcionalidades específicas que o sistema d
 
 | ID | Requisito Funcional | Descrição | Prioridade | Critérios de Aceitação |
 |---|---|---|---|---|
-| RF 3.1 | Painel de Acompanhamento (Gestor) | O Gestor deve ter um painel em tempo real para monitorar o status das avaliações da sua equipe, os resultados parciais e o posicionamento atual na matriz Nine Box | Alta | O painel deve mostrar status das avaliações em tempo real. Permitir filtro por equipe, período e tipos de avaliação. Apresentar resumo do posicionamento na matriz Nine Box. |
-| RF 3.2 | Painel de Sucessão Estratégica (RH) | O sistema deve gerar relatórios de sucessão que identifiquem possíveis sucessores para cargos críticos, exibindo lacunas de competências e sugerindo Planos de Desenvolvimento Individual (PDIs) | Média | Gerar relatórios de sucessão com identificação de lacunas de competências. Disponibilizar sugestões automáticas para PDIs. Relatórios exportáveis em formatos comuns (PDF, Excel). |
-| RF 3.3 | Relatório de Divergências | O sistema deve sinalizar e listar avaliações com notas que fujam de um desvio-padrão aceitável, permitindo ao RH investigar possíveis vieses ou divergências | Média | Identificar avaliações fora do desvio-padrão aceitável. Permitir investigação detalhada com logs e histórico. Notificação automática ao RH sobre possíveis vieses. |
+| RF 3.1 | Painel de Acompanhamento (Gestor) | O Gestor deve ter um painel em tempo real para monitorar o status das avaliações da sua equipe, os resultados parciais e o posicionamento atual na matriz Nine Box | Alta | Será gerado apenas uma query SQL com informações. |
+| RF 3.2 | Painel de Sucessão Estratégica (RH) | O sistema deve gerar relatórios de sucessão que identifiquem possíveis sucessores para cargos críticos, exibindo lacunas de competências e sugerindo Planos de Desenvolvimento Individual (PDIs) | Média | Será gerada uam query SQL com as informações. |
 
 ### RF 4: Experiência do Colaborador (Mobile)
 
 | ID | Requisito Funcional | Descrição | Prioridade | Critérios de Aceitação |
 |---|---|---|---|---|
-| RF 4.1 | Feedback Contínuo e Visualização Móvel | O Colaborador deve ser capaz de acessar pelo celular (App Mobile ou Web Responsivo) seu feedback estruturado, notas de performance e seu plano de carreira/trilhas liberadas | Alta | O colaborador deve acessar via app ou web responsivo seu feedback detalhado. Visualizar notas, evolução e plano de carreira com interface intuitiva. O conteúdo deve carregar em menos de 3 segundos. |
-| RF 4.2 | Notificações | O sistema deve enviar notificações (push/e-mail) ao colaborador sobre novos feedbacks recebidos ou novas trilhas de carreira liberadas | Média | Envio de notificações push ou e-mail em caso de novos feedbacks e habilitação de trilhas. Configuração para gerenciar permissões de recebimento. Histórico de notificações disponível para o colaborador. |
+| RF 4.1 | Feedback Contínuo e Visualização | O Colaborador deve ser capaz de acessar via Web (Responsivo) seu feedback estruturado, notas de performance e seu plano de carreira/trilhas liberadas | Alta | O colaborador deve acessar via web responsivo seu feedback detalhado. Visualizar notas, evolução e plano de carreira com interface intuitiva. O conteúdo deve carregar em menos de 3 segundos. |
 
 ### RF 5: Administração de Sistemas
 
 | ID | Requisito Funcional | Descrição | Prioridade | Critérios de Aceitação |
 |---|---|---|---|---|
 | RF 5.1 | Gestão de Perfis de Usuário | O Administrador de Sistemas deve ser capaz de criar, editar, desativar e deletar perfis de usuários, definindo permissões específicas por papel (Gestor, RH, Colaborador, Admin) | Alta | Interface clara para criação e gerenciamento de perfis. Validação de dados obrigatórios. Prevenção de deleção de perfis em uso. Possibilidade de soft delete com manutenção de histórico. |
-| RF 5.2 | Controle de Acesso Baseado em Função (RBAC) | Implementar controle de acesso baseado em função para limitar acesso e funcionalidades conforme o perfil configurado | Alta | Permissões granulares devem ser aplicadas por funcionalidade. Aplicação de permissões em tempo real. Mensagem clara de acesso negado quando necessário. Logs de tentativas de acesso não autorizado. |
-| RF 5.3 | Configuração de Autenticação | O Administrador deve ser capaz de configurar protocolos de autenticação, incluindo Single Sign-On (SSO) quando disponível, e gerenciar políticas de senha | Média | Interface de configuração de SSO acessível. Suporte a protocolos como OAuth 2.0 ou SAML 2.0. Testes de conexão com provedor de identidade. Fallback para autenticação local. |
-| RF 5.4 | Auditoria de Acessos | O sistema deve registrar e disponibilizar logs de todas as ações do Administrador sobre perfis e configurações para rastreabilidade e conformidade | Alta | Logs completos de quem fez o quê e quando. Logs imutáveis e resistentes a alterações. Relatórios de auditoria exportáveis. Retenção de logs conforme LGPD. |
-| RF 5.5 | Configuração de Parâmetros do Sistema | O Administrador deve configurar parâmetros do sistema como limites de desempenho, fórmulas de cálculo, critérios de elegibilidade e regras de negócio | Média | Interface configurável sem necessidade de alteração de código. Validação de valores inseridos. Versionamento de configurações. Backup automático de configurações. Possibilidade de reverter para versão anterior. |
-| RF 5.6 | Monitoramento de Saúde do Sistema | O Administrador deve visualizar e monitorar o status de performance, uso de recursos, alertas e logs de erro do sistema | Média | Dashboard com métricas de performance em tempo real. Alertas de falhas ou anomalias. Logs de erro centralizados. Estatísticas de uso do sistema. Recomendações de ação. |
 
 ---
 
