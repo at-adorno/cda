@@ -3,7 +3,7 @@
 ## Sistema de Ciclo de Desempenho Automatizado - MVP
 
 **Funcionalidade:** Automatização para um fluxo de trabalho eficiente.  
-**Versão:** 03  
+**Versão:** 04  
 **Data:** Novembro de 2025
 
 ---
@@ -42,10 +42,8 @@ O processo de gestão de desempenho é manual, fragmentado em planilhas e formul
 
 O projeto será considerado bem-sucedido se:
 
-1. Redução do tempo total de avaliação em pelo menos 40%
-2. Redução do tempo de consolidação e fechamento do ciclo em 50%
-3. Alinhamento do mérito e progressão de carreira a métricas objetivas (mensurável por auditoria interna)
-4. Aumento da satisfação e clareza dos colaboradores (mensurável por survey pós-implementação), com meta mínima de 4/5
+1. Todos envolvidos desempenharem o sue papel
+2. Apresentarem uam solução robusta inicial com possibilidade de expansão
 
 ---
 
@@ -53,10 +51,10 @@ O projeto será considerado bem-sucedido se:
 
 | Persona | Uso Principal | Plataforma | Foco da Interação |
 |---------|---------------|-----------|-------------------|
-| **Gestor de Equipe** | Acompanhamento do ciclo, avaliações, monitoramento de evolução | Web (Desktop/Tablet) | Tomada de decisões justas e ágeis |
+| **Gestor de Equipe** | Acompanhamento do ciclo, avaliações, monitoramento de evolução | Web (Desktop) | Tomada de decisões justas e ágeis |
 | **Analista de RH** | Consolidação de dados, aplicação de métricas, gestão da sucessão | Web (Desktop) | Precisão e rastreabilidade dos dados; relatórios estratégicos |
-| **Colaborador** | Acesso a feedback, acompanhamento de performance, visualização do plano de carreira | Celular (App Mobile/Web Responsivo) | Transparência e visibilidade da sua evolução |
-| **Administrador de Sistemas** | Configuração de perfis de usuário, gestão de acessos, manutenção do sistema | Web (Admin - Desktop) | Segurança, controle centralizado, auditoria e conformidade |
+| **Colaborador** | Acesso a feedback, acompanhamento de performance, visualização do plano de carreira | Acesso Web Responsivo | Transparência e visibilidade da sua evolução |
+| **Administrador de Sistemas** | Configuração de perfis de usuário, manutenção do sistema | Web (Admin - Desktop) | Segurança, controle centralizado, auditoria e conformidade |
 
 ---
 
@@ -116,15 +114,12 @@ Os requisitos não funcionais determinam os padrões de qualidade e as restriç�
 ### RNF 2: Usabilidade (UX/UI)
 
 - **RNF 2.1 (Padrão de Design):** A interface do usuário (UI) deve ser limpa, moderna e consistente em todas as plataformas (Web e Mobile).
-- **RNF 2.2 (Responsividade Móvel):** A experiência do Colaborador no celular deve ser otimizada para toque e totalmente responsiva.
-- **RNF 2.3 (Acessibilidade):** A plataforma deve seguir diretrizes básicas de acessibilidade (WCAG) em termos de contraste de cores e navegação por teclado.
+- **RNF 2.2 (Acessibilidade):** A plataforma deve seguir diretrizes básicas de acessibilidade (WCAG) em termos de contraste de cores e navegação por teclado.
 
 ### RNF 3: Integração e Segurança
 
-- **RNF 3.1 (Integração de Dados):** O sistema deve ter uma API (Web Service/REST) bem documentada para integração bidirecional (envio e recebimento) com o Sistema de Folha de Pagamento e outros Módulos de RH.
-- **RNF 3.2 (Segurança de Acesso):** O acesso deve ser protegido por autenticação (via Single Sign-On - SSO, se disponível) e deve aderir estritamente ao controle de acesso baseado em função (RBAC - Role-Based Access Control).
-- **RNF 3.3 (Conformidade Legal):** O tratamento e armazenamento de dados pessoais e de desempenho devem estar em total conformidade com a LGPD (Lei Geral de Proteção de Dados Pessoais).
-- **RNF 3.4 (Criptografia):** Todos os dados sensíveis devem ser criptografados em repouso (AES-256) e em trânsito (TLS 1.2 ou superior).
+- **RNF 3.1 (Conformidade Legal):** O tratamento e armazenamento de dados pessoais e de desempenho devem estar em total conformidade com a LGPD (Lei Geral de Proteção de Dados Pessoais).
+- **RNF 3.2 (Criptografia):** Todos os dados sensíveis devem ser criptografados em repouso (AES-256) e em trânsito (TLS 1.2 ou superior).
 
 ---
 
@@ -141,4 +136,5 @@ Os requisitos não funcionais determinam os padrões de qualidade e as restriç�
 | 01 | Outubro de 2025 | Versão inicial |
 | 02 | Novembro de 2025 | Correções de português, formatação padronizada |
 | 03 | Novembro de 2025 | Inclusão do Administrador de Sistemas como persona, adição de RF 5 (Administração de Sistemas) |
+| 04 | Novembro de 2025 | Simplificação do projeto |
 
