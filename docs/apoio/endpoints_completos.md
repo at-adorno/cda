@@ -19,7 +19,6 @@ Autentica o usuário no sistema.
 ```json
 {
   "success": true,
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "usuario": {
     "id": 12,
     "nome": "Ana Souza",
@@ -251,32 +250,6 @@ Retorna feedback recebido.
 
 ---
 
-## **POST /api/admin/usuarios/importar**
-Importa usuários via CSV.
-
-### **Body (multipart/form-data)**
-Arquivo CSV contendo:
-
-```
-nome,email,perfil
-Ana,ana@example.com,GESTOR
-```
-
-### **Resposta**
-```json
-{
-  "success": true,
-  "importados": 14
-}
-```
-
----
-
-## **POST /api/admin/colaboradores/importar**
-Importa colaboradores.
-
----
-
 ## **POST /api/admin/ciclos**
 Cria um ciclo de avaliação.
 
@@ -325,5 +298,3 @@ Retorna configurações.
 Atualiza configuração.
 
 ---
-
-Arquivo gerado automaticamente.
