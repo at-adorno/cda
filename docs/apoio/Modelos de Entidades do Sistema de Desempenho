@@ -1,0 +1,69 @@
+ Modelos de Entidades do Sistema de Desempenho 
+
+I. Modelos de Base e Acesso
+Entidade: PERFIL
+Finalidade: Define o nível de acesso e permissões (Ex: Admin, Gestor).
+Atributos: id, nome (Único), descricao, created_at, updated_at.
+
+Entidade: CARGO
+Finalidade: Descreve a posição hierárquica na empresa.
+Atributos: id, titulo (Único), descricao, created_at, updated_at.
+
+Entidade: USUARIO
+Finalidade: Armazena credenciais de login e associa ao Perfil.
+Atributos: id, email (Único), nome, perfil_id (Chave Estrangeira para PERFIL), senha_hash, created_at, updated_at.
+
+Entidade: COLABORADOR
+Finalidade: Entidade central de pessoas. Liga o login (usuario_id) ao Cargo e à Hierarquia.
+Atributos: id, usuario_id (FK para USUARIO, Única), nome, cargo_id (FK para CARGO), gestor_id (FK Recursiva para COLABORADOR), matricula (Única, Obrigatória), ativo, created_at, updated_at.
+
+Entidade: COLABORADOR_IMPORT
+Finalidade: Tabela de staging para processamento de dados de importação.
+Atributos: id, matricula, nome_completo, email_corporativo, nome_cargo, data_admissao, matricula_gestor, status_processamento, mensagem_erro, data_registro, updated_at.
+
+II.  Modelos de Ciclo e Participação
+Entidade: CICLO_DESEMPENHO
+
+Finalidade: Define o período de avaliação oficial do sistema.
+
+Atributos: id, nome (Único), data_inicio, data_fim, descricao, criado_por (FK para USUARIO), created_at, updated_at.
+Entidade: CICLO_COLABORADOR
+Finalidade: Tabela de junção M:N que registra a participação de um colaborador em um ciclo.
+
+Atributos: id, ciclo_id (FK para CICLO_DESEMPENHO), colaborador_id (FK para COLABORADOR), recomendacao_experiencia, status_experiencia, created_at, updated_at.
+Restrição: O par (ciclo_id, colaborador_id) deve ser ÚNICO.
+
+III. Modelos de Itens e Avaliação
+Entidade: COMPETENCIA
+
+Finalidade: Define os itens de avaliação focados em comportamentos e habilidades.
+Atributos: id, nome (Único), descricao, peso, created_at, updated_at.
+
+Entidade: META
+Finalidade: Define os itens de avaliação focados em resultados e objetivos (KPIs/OKRs).
+Atributos: id, titulo, descricao, peso, prazo, created_at, updated_at.
+
+Entidade: AVALIACAO
+Finalidade: Cabeçalho que representa uma avaliação específica (Autoavaliação, Gestor, etc.) dentro de um ciclo.
+Atributos: id, ciclo_colaborador_id (FK para CICLO_COLABORADOR), avaliador_id (FK para COLABORADOR), tipo (Ex: GESTOR), status, pontuacao_merito, data_envio, comentario, created_at, updated_at.
+Restrição: O trio (ciclo_colaborador_id, avaliador_id, tipo) deve ser ÚNICO.
+
+Entidade: PONTUACAO
+Finalidade: Detalhe da nota e feedback de uma Competência OU uma Meta para uma Avaliação.
+Atributos: id, avaliacao_id (FK para AVALIACAO), competencia_id (FK para COMPETENCIA, Opcional), meta_id (FK para META, Opcional), nota (Obrigatória), comentario, peso_aplicado, created_at, updated_at.
+Restrição: É obrigatório preencher competencia_id OU meta_id, mas nunca ambos.
+
+IV. Modelos de Resultado e Carreira
+Entidade: NINE_BOX
+
+Finalidade: Armazena o resultado final do ciclo de um colaborador na matriz 9-Box.
+Atributos: id, ciclo_colaborador_id (FK para CICLO_COLABORADOR, Única), posicao_x_potencial, posicao_y_desempenho, score_competencias, score_metas, score_final_merito, elegivel_carreira, data_calculo, created_at, updated_at.
+
+Entidade: PLANO_CARREIRA
+Finalidade: Catálogo dos planos de desenvolvimento ou trilhas de carreira.
+Atributos: id, nome (Único), descricao, versao, publicado, created_at, updated_at.
+
+Entidade: COLABORADOR_TRILHA
+Finalidade: Liga um Colaborador a um Plano de Carreira, registrando seu status de liberação.
+Atributos: id, plano_id (FK para PLANO_CARREIRA), colaborador_id (FK para COLABORADOR), data_inicio, data_fim, status, created_at, updated_at.
+Restrição: O par (plano_id, colaborador_id) deve ser ÚNICO.
