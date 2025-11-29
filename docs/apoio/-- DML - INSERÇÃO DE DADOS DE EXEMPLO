@@ -1,0 +1,190 @@
+-- ==========================================================
+-- DML - INSERÇÃO DE DADOS DE EXEMPLO
+-- Sistema de Ciclo de Desempenho Automatizado
+-- ==========================================================
+
+-- 1. PERFIL (Acesso)
+INSERT INTO public.perfil (id, nome, descricao) VALUES
+(1, 'Administrador', 'Acesso total ao sistema.'),
+(2, 'Gestor', 'Pode avaliar sua equipe e ver relatórios.'),
+(3, 'Colaborador', 'Pode realizar autoavaliação e ver seu próprio resultado.');
+
+-- 2. CARGO (Base)
+INSERT INTO public.cargo (id, titulo, descricao) VALUES
+(1, 'Gerente de Engenharia', 'Liderança de equipes de desenvolvimento de software.'),
+(2, 'Analista de Software Sênior', 'Desenvolvimento e manutenção de sistemas complexos.'),
+(3, 'Desenvolvedor Júnior', 'Implementação de funcionalidades sob supervisão.');
+
+-- Resetar sequências para garantir que os IDs seguintes continuem o auto-incremento
+SELECT setval('public.perfil_id_seq', 3, true);
+SELECT setval('public.cargo_id_seq', 3, true);
+
+--------------------------------------------------------------
+-- 3 & 4. USUARIO e COLABORADOR (Criação do Gestor e Colaboradores)
+--------------------------------------------------------------
+
+-- Dados Base para o Gestor (Líder da Equipe)
+INSERT INTO public.usuario (id, email, nome, perfil_id, senha_hash) VALUES
+(10, 'ana.gomes@empresa.com.br', 'Ana Gomes', 2, 'hash_senha_ana');
+
+INSERT INTO public.colaborador (id, usuario_id, nome, cargo_id, gestor_id, matricula, ativo) VALUES
+(100, 10, 'Ana Gomes', 
+    (SELECT id FROM public.cargo WHERE titulo = 'Gerente de Engenharia'), 
+    NULL, -- Ana é a gestora principal neste exemplo, não tem gestor
+    'MAT001', TRUE);
+
+-- Dados Base para Colaborador 1 (Reporte da Ana)
+INSERT INTO public.usuario (id, email, nome, perfil_id, senha_hash) VALUES
+(11, 'bruce.wayne@empresa.com.br', 'Bruce Wayne', 3, 'hash_senha_bruce');
+
+INSERT INTO public.colaborador (id, usuario_id, nome, cargo_id, gestor_id, matricula, ativo) VALUES
+(101, 11, 'Bruce Wayne', 
+    (SELECT id FROM public.cargo WHERE titulo = 'Analista de Software Sênior'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT001'), -- Gestor é Ana Gomes (MAT001)
+    'MAT002', TRUE);
+
+-- Dados Base para Colaborador 2 (Reporte da Ana)
+INSERT INTO public.usuario (id, email, nome, perfil_id, senha_hash) VALUES
+(12, 'carla.dias@empresa.com.br', 'Carla Dias', 3, 'hash_senha_carla');
+
+INSERT INTO public.colaborador (id, usuario_id, nome, cargo_id, gestor_id, matricula, ativo) VALUES
+(102, 12, 'Carla Dias', 
+    (SELECT id FROM public.cargo WHERE titulo = 'Desenvolvedor Júnior'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT001'), -- Gestor é Ana Gomes (MAT001)
+    'MAT003', TRUE);
+
+SELECT setval('public.usuario_id_seq', 12, true);
+SELECT setval('public.colaborador_id_seq', 102, true);
+
+--------------------------------------------------------------
+-- 5. CICLO_DESEMPENHO
+--------------------------------------------------------------
+INSERT INTO public.ciclo_desempenho (id, nome, data_inicio, data_fim, descricao, criado_por) VALUES
+(1, 'Ciclo Anual 2025', '2025-01-01', '2025-12-31', 'Avaliação de desempenho anual para todos os colaboradores.', 
+    (SELECT id FROM public.usuario WHERE email = 'ana.gomes@empresa.com.br'));
+
+SELECT setval('public.ciclo_desempenho_id_seq', 1, true);
+
+--------------------------------------------------------------
+-- 5.1. CICLO_COLABORADOR (Matriculando Bruce e Carla no Ciclo)
+--------------------------------------------------------------
+INSERT INTO public.ciclo_colaborador (id, ciclo_id, colaborador_id, status_experiencia) VALUES
+(1000, 
+    (SELECT id FROM public.ciclo_desempenho WHERE nome = 'Ciclo Anual 2025'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT002'), -- Bruce Wayne
+    'EM ANDAMENTO'),
+(1001, 
+    (SELECT id FROM public.ciclo_desempenho WHERE nome = 'Ciclo Anual 2025'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT003'), -- Carla Dias
+    'EM ANDAMENTO');
+
+SELECT setval('public.ciclo_colaborador_id_seq', 1001, true);
+
+--------------------------------------------------------------
+-- 6 & 7. COMPETENCIA e META (Itens de Avaliação)
+--------------------------------------------------------------
+INSERT INTO public.competencia (id, nome, descricao, peso) VALUES
+(10, 'Comunicação Interpessoal', 'Habilidade de transmitir e receber informações de forma clara.', 1.5),
+(11, 'Inovação e Criatividade', 'Capacidade de gerar novas ideias e soluções.', 1.0);
+
+INSERT INTO public.meta (id, titulo, descricao, peso, prazo) VALUES
+(20, 'Redução de Bugs em 15%', 'Redução de defeitos reportados em produção no segundo semestre.', 2.0, '2025-12-31'),
+(21, 'Conclusão de Certificação Cloud', 'Obter a certificação AWS Certified Developer - Associate.', 1.0, '2025-09-30');
+
+SELECT setval('public.competencia_id_seq', 11, true);
+SELECT setval('public.meta_id_seq', 21, true);
+
+--------------------------------------------------------------
+-- 8. AVALIACAO (Para Bruce Wayne)
+--------------------------------------------------------------
+-- Autoavaliação de Bruce Wayne
+INSERT INTO public.avaliacao (id, ciclo_colaborador_id, avaliador_id, tipo, status, data_envio) VALUES
+(200, 
+    (SELECT id FROM public.ciclo_colaborador WHERE colaborador_id = (SELECT id FROM public.colaborador WHERE matricula = 'MAT002')), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT002'), -- Avaliador é o próprio Bruce
+    'AUTOAVALIACAO', 'CONCLUIDA', NOW() - INTERVAL '30 days');
+
+-- Avaliação do Gestor (Ana Gomes) para Bruce Wayne
+INSERT INTO public.avaliacao (id, ciclo_colaborador_id, avaliador_id, tipo, status, pontuacao_merito) VALUES
+(201, 
+    (SELECT id FROM public.ciclo_colaborador WHERE colaborador_id = (SELECT id FROM public.colaborador WHERE matricula = 'MAT002')), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT001'), -- Avaliador é Ana Gomes
+    'GESTOR', 'CONCLUIDA', 4.5);
+
+SELECT setval('public.avaliacao_id_seq', 201, true);
+
+--------------------------------------------------------------
+-- 9. PONTUACAO (Notas para a Avaliação do Gestor - 201)
+--------------------------------------------------------------
+-- Pontuação 1: Competência (Comunicação)
+INSERT INTO public.pontuacao (id, avaliacao_id, competencia_id, nota, comentario) VALUES
+(300, 
+    (SELECT id FROM public.avaliacao WHERE id = 201), 
+    (SELECT id FROM public.competencia WHERE nome = 'Comunicação Interpessoal'), 
+    4.0, 
+    'Bruce melhorou significativamente a clareza em reuniões técnicas.');
+
+-- Pontuação 2: Competência (Inovação)
+INSERT INTO public.pontuacao (id, avaliacao_id, competencia_id, nota, comentario) VALUES
+(301, 
+    (SELECT id FROM public.avaliacao WHERE id = 201), 
+    (SELECT id FROM public.competencia WHERE nome = 'Inovação e Criatividade'), 
+    5.0, 
+    'Excelência na proposta de novas arquiteturas para o projeto X.');
+
+-- Pontuação 3: Meta (Redução de Bugs)
+INSERT INTO public.pontuacao (id, avaliacao_id, meta_id, nota, comentario) VALUES
+(302, 
+    (SELECT id FROM public.avaliacao WHERE id = 201), 
+    (SELECT id FROM public.meta WHERE titulo = 'Redução de Bugs em 15%'), 
+    4.5, -- Atingiu 90% da meta
+    'Quase atingiu a meta, ficando em 13% de redução.');
+
+-- Pontuação 4: Meta (Certificação Cloud)
+INSERT INTO public.pontuacao (id, avaliacao_id, meta_id, nota, comentario) VALUES
+(303, 
+    (SELECT id FROM public.avaliacao WHERE id = 201), 
+    (SELECT id FROM public.meta WHERE titulo = 'Conclusão de Certificação Cloud'), 
+    5.0, -- Meta atingida
+    'Certificação concluída em agosto/2025, antes do prazo.');
+
+SELECT setval('public.pontuacao_id_seq', 303, true);
+
+--------------------------------------------------------------
+-- 10. NINE_BOX (Resultado Final para Bruce Wayne)
+--------------------------------------------------------------
+INSERT INTO public.nine_box (id, ciclo_colaborador_id, posicao_x_potencial, posicao_y_desempenho, score_competencias, score_metas, score_final_merito, elegivel_carreira) VALUES
+(10, 
+    (SELECT id FROM public.ciclo_colaborador WHERE colaborador_id = (SELECT id FROM public.colaborador WHERE matricula = 'MAT002')), 
+    'Alto', 
+    'Alto', 
+    4.5, 
+    4.75, 
+    4.62, 
+    TRUE);
+
+SELECT setval('public.nine_box_id_seq', 10, true);
+
+--------------------------------------------------------------
+-- 11 & 12. PLANO_CARREIRA e COLABORADOR_TRILHA
+--------------------------------------------------------------
+INSERT INTO public.plano_carreira (id, nome, descricao, versao, publicado) VALUES
+(50, 'Trilha para Liderança Técnica', 'Plano para Analistas Sênior com potencial para Gestão.', '1.0', TRUE);
+
+INSERT INTO public.colaborador_trilha (id, plano_id, colaborador_id, data_inicio, status) VALUES
+(500, 
+    (SELECT id FROM public.plano_carreira WHERE nome = 'Trilha para Liderança Técnica'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT002'), -- Bruce Wayne
+    '2026-01-15', 
+    'LIBERADO');
+
+SELECT setval('public.plano_carreira_id_seq', 50, true);
+SELECT setval('public.colaborador_trilha_id_seq', 500, true);
+
+--------------------------------------------------------------
+-- 13. COLABORADOR_IMPORT (Dados de Staging para um próximo colaborador)
+--------------------------------------------------------------
+INSERT INTO public.colaborador_import (id, matricula, nome_completo, email_corporativo, nome_cargo, data_admissao, matricula_gestor, status_processamento) VALUES
+(1, 'MAT004', 'Diana Prince', 'diana.prince@empresa.com.br', 'Designer UX Sênior', '2025-05-10', 'MAT001', 'PENDENTE');
+
+SELECT setval('public.colaborador_import_id_seq', 1, true);
