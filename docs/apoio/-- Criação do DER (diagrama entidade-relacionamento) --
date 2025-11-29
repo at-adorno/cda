@@ -3,6 +3,7 @@ Entidade
 Chave Primária (PK)
 Atributos Importantes
 Relações Chave
+
 USUARIO
 id_usuario (PK)
 nome, email, senha_hash, id_perfil (FK)
