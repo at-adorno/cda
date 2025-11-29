@@ -1,0 +1,137 @@
+-- DML 1: Colaboradores Adicionais (Começa após MAT003)
+
+-- Novo Gestor (Supervisor de Vendas)
+INSERT INTO public.perfil (id, nome) VALUES (4, 'Supervisor');
+INSERT INTO public.cargo (id, titulo) VALUES (4, 'Supervisor de Vendas');
+INSERT INTO public.usuario (id, email, nome, perfil_id, senha_hash) VALUES
+(13, 'daniel.evo@empresa.com.br', 'Daniel Evo', 2, 'hash_daniel');
+
+INSERT INTO public.colaborador (id, usuario_id, nome, cargo_id, gestor_id, matricula, ativo) VALUES
+(103, 13, 'Daniel Evo', 
+    (SELECT id FROM public.cargo WHERE titulo = 'Supervisor de Vendas'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT001'), -- Reporta à Ana Gomes
+    'MAT004', TRUE);
+
+-- Colaborador 3 (Reporte de Ana Gomes, mas sem gestor imediato definido no momento)
+INSERT INTO public.usuario (id, email, nome, perfil_id, senha_hash) VALUES
+(14, 'eliza.lima@empresa.com.br', 'Eliza Lima', 3, 'hash_eliza');
+
+INSERT INTO public.colaborador (id, usuario_id, nome, cargo_id, gestor_id, matricula, ativo) VALUES
+(104, 14, 'Eliza Lima', 
+    (SELECT id FROM public.cargo WHERE titulo = 'Desenvolvedor Júnior'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT001'),
+    'MAT005', TRUE);
+
+-- Colaborador 4 (Reporte de Daniel Evo)
+INSERT INTO public.usuario (id, email, nome, perfil_id, senha_hash) VALUES
+(15, 'fernanda.nunes@empresa.com.br', 'Fernanda Nunes', 3, 'hash_fernanda');
+
+INSERT INTO public.colaborador (id, usuario_id, nome, cargo_id, gestor_id, matricula, ativo) VALUES
+(105, 15, 'Fernanda Nunes', 
+    (SELECT id FROM public.cargo WHERE titulo = 'Supervisor de Vendas'), 
+    (SELECT id FROM public.colaborador WHERE matricula = 'MAT004'), -- Reporta a Daniel Evo
+    'MAT006', TRUE);
+
+-- Atualiza sequências
+SELECT setval('public.perfil_id_seq', 4, true);
+SELECT setval('public.cargo_id_seq', 4, true);
+SELECT setval('public.usuario_id_seq', 15, true);
+SELECT setval('public.colaborador_id_seq', 105, true);
+
+Definição de 3 Ciclos de Desempenho
+
+-- DML 2: Ciclos Adicionais (Começa após o ID 1)
+
+-- Ciclo 2: Passado e Fechado
+INSERT INTO public.ciclo_desempenho (id, nome, data_inicio, data_fim, descricao, criado_por) VALUES
+(2, 'Ciclo 2024 - H1', '2024-01-01', '2024-06-30', 'Avaliação do primeiro semestre de 2024.', 
+    (SELECT id FROM public.usuario WHERE email = 'ana.gomes@empresa.com.br'));
+
+-- Ciclo 3: Futuro (Aberto para planejamento)
+INSERT INTO public.ciclo_desempenho (id, nome, data_inicio, data_fim, descricao, criado_por) VALUES
+(3, 'Ciclo 2026 - Planejamento', '2026-01-01', '2026-12-31', 'Planejamento de Metas para o próximo ano.', 
+    (SELECT id FROM public.usuario WHERE email = 'ana.gomes@empresa.com.br'));
+
+-- Atualiza sequência
+SELECT setval('public.ciclo_desempenho_id_seq', 3, true);
+
+
+Massa de Teste Completa (Ciclos e Avaliações)
+
+-- DML 3.A: Itens de Avaliação Adicionais (Começa após ID 11 e 21)
+
+-- Competências
+INSERT INTO public.competencia (id, nome, descricao, peso) VALUES
+(12, 'Adaptabilidade', 'Capacidade de lidar com mudanças e incertezas.', 0.8),
+(13, 'Liderança Situacional', 'Uso de estilos de liderança apropriados ao contexto.', 1.2);
+
+-- Metas
+INSERT INTO public.meta (id, titulo, descricao, peso, prazo) VALUES
+(22, 'Crescimento de Vendas 5%', 'Atingir 5% de crescimento no faturamento do setor.', 2.5, '2024-06-30'),
+(23, 'Lançamento de Produto X', 'Lançar o novo produto X no mercado.', 1.8, '2026-03-01');
+
+SELECT setval('public.competencia_id_seq', 13, true);
+SELECT setval('public.meta_id_seq', 23, true);
+Participação nos 3 Ciclos (CICLO_COLABORADOR)
+-- DML 3.B: Participação nos Ciclos (Começa após ID 1001)
+-- Ciclo 2024 - H1 (ID 2)
+INSERT INTO public.ciclo_colaborador (id, ciclo_id, colaborador_id, status_experiencia) VALUES
+(1002, 2, (SELECT id FROM public.colaborador WHERE matricula = 'MAT002'), 'CONCLUIDO'), -- Bruce
+(1003, 2, (SELECT id FROM public.colaborador WHERE matricula = 'MAT003'), 'CONCLUIDO'), -- Carla
+(1004, 2, (SELECT id FROM public.colaborador WHERE matricula = 'MAT004'), 'CONCLUIDO'); -- Daniel
+
+-- Ciclo 2025 - Anual (ID 1) - Já inseridos 1000 e 1001. Vamos adicionar Daniel, Eliza e Fernanda.
+INSERT INTO public.ciclo_colaborador (id, ciclo_id, colaborador_id, status_experiencia) VALUES
+(1005, 1, (SELECT id FROM public.colaborador WHERE matricula = 'MAT004'), 'EM ANDAMENTO'), -- Daniel
+(1006, 1, (SELECT id FROM public.colaborador WHERE matricula = 'MAT005'), 'EM ANDAMENTO'), -- Eliza
+(1007, 1, (SELECT id FROM public.colaborador WHERE matricula = 'MAT006'), 'EM ANDAMENTO'); -- Fernanda
+
+-- Ciclo 2026 - Planejamento (ID 3)
+INSERT INTO public.ciclo_colaborador (id, ciclo_id, colaborador_id, status_experiencia) VALUES
+(1008, 3, (SELECT id FROM public.colaborador WHERE matricula = 'MAT002'), 'PLANEJAMENTO'), -- Bruce
+(1009, 3, (SELECT id FROM public.colaborador WHERE matricula = 'MAT006'), 'PLANEJAMENTO'); -- Fernanda
+
+SELECT setval('public.ciclo_colaborador_id_seq', 1009, true);
+Avaliações e Pontuações (Foco no Ciclo Passado)
+-- DML 3.C: Avaliação Fechada (Bruce no Ciclo 2)
+
+-- ID do ciclo_colaborador para Bruce no ciclo 2024-H1
+-- Bruce: MAT002, Ciclo 2. ID 1002. Gestor: Ana Gomes (MAT001)
+WITH c_colab AS (
+    SELECT id FROM public.ciclo_colaborador WHERE id = 1002
+),
+gestor_id AS (
+    SELECT id FROM public.colaborador WHERE matricula = 'MAT001'
+),
+bruce_id AS (
+    SELECT id FROM public.colaborador WHERE matricula = 'MAT002'
+)
+INSERT INTO public.avaliacao (id, ciclo_colaborador_id, avaliador_id, tipo, status, data_envio) VALUES
+(202, (SELECT id FROM c_colab), (SELECT id FROM bruce_id), 'AUTOAVALIACAO', 'CONCLUIDA', '2024-06-20'),
+(203, (SELECT id FROM c_colab), (SELECT id FROM gestor_id), 'GESTOR', 'CONCLUIDA', '2024-07-05');
+
+-- Pontuações para a Avaliação do Gestor (ID 203) - Bruce no Ciclo 2024-H1
+INSERT INTO public.pontuacao (id, avaliacao_id, competencia_id, meta_id, nota, comentario) VALUES
+-- Competência: Liderança Situacional (ID 13)
+(304, 203, 13, NULL, 4.5, 'Demonstrou excelente capacidade de adaptação no projeto inicial.'),
+-- Meta: Crescimento de Vendas 5% (ID 22) - Aplicada mesmo sendo engenheiro, como teste
+(305, 203, NULL, 22, 5.0, 'Bruce entregou as ferramentas que permitiram o crescimento de vendas em 6%.');
+
+-- Resultado NINE_BOX para Bruce no Ciclo 2024 - H1
+INSERT INTO public.nine_box (id, ciclo_colaborador_id, posicao_x_potencial, posicao_y_desempenho, score_competencias, score_metas, score_final_merito, elegivel_carreira) VALUES
+(11, 1002, 'Alto', 'Alto', 4.8, 5.0, 4.9, TRUE);
+
+SELECT setval('public.avaliacao_id_seq', 203, true);
+SELECT setval('public.pontuacao_id_seq', 305, true);
+SELECT setval('public.nine_box_id_seq', 11, true);
+
+Resumo dos Dados de Teste
+
+Entidade	Total de Registros	Notas Importantes
+COLABORADOR	6	2 Gestores (Ana, Daniel) e 4 Colaboradores.
+CICLO_DESEMPENHO	3	1 Fechado (2024), 1 Atual (2025), 1 Futuro (2026).
+CICLO_COLABORADOR	10	Representando a participação em massa nos 3 ciclos.
+AVALIACAO	4 (Nova Massa) + 2 (Base) = 6	Autoavaliação e Gestor para Bruce em 2 ciclos.
+PONTUACAO	2 (Nova Massa) + 4 (Base) = 6	Notas detalhadas para testes de cálculo de score.
+NINE_BOX	1 (Nova Massa) + 1 (Base) = 2	Resultados finais fechados para 2 ciclos de Bruce.
+
