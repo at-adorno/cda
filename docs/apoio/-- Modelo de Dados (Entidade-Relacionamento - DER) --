@@ -1,0 +1,29 @@
+Entidades Base e Acesso
+
+As entidades base são PERFIL, USUARIO, CARGO e COLABORADOR.
+PERFIL (PK: id_perfil): Define o nível de acesso (Admin, Gestor, RH, Colaborador).
+USUARIO (PK: id_usuario): Armazena dados de login (email, senha_hash). Possui uma FK para PERFIL (id\_perfil), representando uma relação de Muitos para Um (N:1).
+CARGO (PK: id_cargo): (ADICIONADO) Padroniza os títulos e descrições dos cargos.
+COLABORADOR (PK: id_colaborador): Representa a pessoa no sistema. Possui uma FK para USUARIO (id\_usuario) para vincular o acesso ao indivíduo (relação 1:1). Também possui uma FK para CARGO (id\_cargo) e uma FK recursiva para ele mesmo (id\_gestor), representando a relação de Liderança (1:N).
+Entidades de Ciclo e Participação
+
+O CICLO_DESEMPENHO e o CICLO_COLABORADOR gerenciam os períodos de avaliação.
+CICLO_DESEMPENHO (PK: id_ciclo): Define o período da avaliação.
+CICLO_COLABORADOR (PK: id_ciclo_colaborador): É a tabela de junção N:M que registra a participação de um colaborador em um ciclo. Possui FKs para CICLO_DESEMPENHO (id\_ciclo) e COLABORADOR (id\_colaborador). Os atributos importantes incluem recomendacao\_experiencia e status (para o RF 1.4). A combinação de (id\_ciclo, id\_colaborador) é uma restrição de unicidade (UNIQUE).
+Entidades de Avaliação e Mérito
+AVALIACAO (PK: id_avaliacao): O cabeçalho de cada avaliação (autoavaliação, avaliação do gestor, etc.). Possui uma FK para CICLO_COLABORADOR (id\_ciclo\_colaborador) para garantir que a avaliação ocorra dentro de um ciclo específico. Também possui FK para o COLABORADOR que atua como avaliador (id\_avaliador).
+COMPETENCIA (PK: id_competencia): Item de avaliação.
+META (PK: id_meta): Item de avaliação.
+PONTUACAO (PK: id_pontuacao): (UNIFICADO) Esta entidade substitui as antigas PONTUACAO_COMPETENCIA e PONTUACAO_META. Ela registra a nota detalhada para um único item. Possui uma FK para AVALIACAO (id\_avaliacao). Possui duas FKs opcionais (id\_competencia e id\_meta), sendo que apenas uma pode ser preenchida (usando uma restrição CHECK). Esta é a implementação da relação N:M entre Avaliação e Itens de Mérito.
+
+Entidades de Resultado e Progressão
+NINE_BOX (PK: id_nine_box): Armazena o resultado final do posicionamento do colaborador (Posição X e Y). Possui uma FK para CICLO_COLABORADOR (id\_ciclo\_colaborador), garantindo um resultado por participante/ciclo.
+FEEDBACK (PK: id_feedback): Armazena o histórico de feedback. Possui FKs para o COLABORADOR receptor (id\_colaborador) e o COLABORADOR avaliador (id\_avaliador).
+TRILHA_CARREIRA (PK: id_trilha): Define um plano de desenvolvimento.
+COLABORADOR_TRILHA (PK: id_colab_trilha): É a tabela de junção N:M que registra as trilhas liberadas para o colaborador. Possui FKs para TRILHA_CARREIRA (id\_trilha) e COLABORADOR (id\_colaborador). A combinação de (id\_colaborador, id\_trilha) é uma restrição de unicidade.
+
+Resumo das Correções Lógicas
+Chaves Compostas: As chaves compostas em CICLO\_COLABORADOR e COLABORADOR\_TRILHA foram redefinidas como restrições de unicidade (UNIQUE) para manter a PK simples (BIGSERIAL).
+Unificação da Pontuação: As duas tabelas N:M (PONTUACAO\_COMPETENCIA e PONTUACAO\_META) foram unificadas em uma única tabela PONTUACAO com lógica de item opcional.
+Entidade CARGO: A entidade CARGO foi explicitamente adicionada para padronizar o atributo cargo em COLABORADOR, garantindo a normalização dos dados.
+
