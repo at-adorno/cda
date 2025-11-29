@@ -7,54 +7,67 @@ USUARIO
 id_usuario (PK)
 nome, email, senha_hash, id_perfil (FK)
 Relaciona-se com PERFIL e COLABORADOR
+
 PERFIL
 id_perfil (PK)
 nome_perfil (Admin, Gestor, RH, Colaborador)
 Relaciona-se com USUARIO
+
 COLABORADOR
 id_colaborador (PK)
 nome, matricula, cargo, data_admissao, status, id_gestor (FK - Recursiva), id_usuario (FK)
 Relaciona-se com CICLO_COLABORADOR, USUARIO
+
 CICLO_DESEMPENHO
 id_ciclo (PK)
 nome_ciclo, data_inicio, data_fim, status
 Relaciona-se com CICLO_COLABORADOR
+
 CICLO_COLABORADOR
 id_ciclo_colaborador (PK)
 PK Composta: (id_ciclo, id_colaborador), recomendacao_experiencia (RF 1.4)
 Relaciona-se com AVALIACAO, NINE_BOX
+
 AVALIACAO
 id_avaliacao (PK)
 pontuacao_merito (RF 2.1), data_envio, status, id_ciclo_colaborador (FK)
 Relaciona-se com PONTUACAO_COMPETENCIA, PONTUACAO_META
+
 COMPETENCIA
 id_competencia (PK)
 nome_competencia, descricao, peso (RF 1.3)
 Relaciona-se com PONTUACAO_COMPETENCIA
+
 META
 id_meta (PK)
 nome_meta, descricao, peso
 Relaciona-se com PONTUACAO_META
+
 PONTUACAO_COMPETENCIA
 id_pont_comp (PK)
 nota_gestor, nota_colaborador, nota_final, id_avaliacao (FK), id_competencia (FK)
 Entidade N:N entre Avaliação e Competência
+
 PONTUACAO_META
 id_pont_meta (PK)
 nota_gestor, nota_final, id_avaliacao (FK), id_meta (FK)
 Entidade N:N entre Avaliação e Meta
+
 NINE_BOX
 id_nine_box (PK)
 posicao_x (Potencial), posicao_y (Desempenho), id_ciclo_colaborador (FK)
 Relaciona-se com CICLO_COLABORADOR
+
 FEEDBACK
 id_feedback (PK)
 texto_feedback, data, tipo (Ponto Forte/Melhoria), id_colaborador (FK), id_avaliador (FK)
 Relaciona-se com COLABORADOR (como receptor e avaliador)
+
 TRILHA_CARREIRA
 id_trilha (PK)
 nome_trilha, criterios_elegibilidade (RF 2.3)
 Relaciona-se com COLABORADOR_TRILHA
+
 COLABORADOR_TRILHA
 id_colab_trilha (PK)
 PK Composta: (id_colaborador, id_trilha), status (Liberada/Concluída)
@@ -70,6 +83,7 @@ Entidades
 Cardinalidade
 Justificativa
 Participação no Ciclo
+
 COLABORADOR - CICLO_DESEMPENHO
 N:M (Implementada via CICLO_COLABORADOR)
 Um colaborador participa de muitos ciclos, e um ciclo tem muitos colaboradores. A tabela de junção armazena dados específicos do ciclo (ex: recomendação de experiência).
@@ -78,14 +92,17 @@ COLABORADOR - COLABORADOR (Recursiva)
 1:N
 Um gestor (id_gestor) supervisiona muitos colaboradores. Um colaborador é supervisionado por apenas um gestor (ou por ele mesmo/Nulo se for o CEO).
 Avaliação
+
 CICLO_COLABORADOR - AVALIACAO
 1:N
 Em um ciclo, um colaborador pode ter múltiplas avaliações (ex: autoavaliação, avaliação do gestor, 360º), mas a avaliação pertence a um único ciclo/colaborador.
 Mérito
+
 AVALIACAO - COMPETENCIA / META
 N:M (Implementada via PONTUACAO_COMPETENCIA e PONTUACAO_META)
 Uma avaliação engloba muitas competências/metas, e uma competência/meta é usada em muitas avaliações. As tabelas de pontuação registram as notas (RF 1.3, 2.1).
 Histórico Nine Box
+
 CICLO_COLABORADOR - NINE_BOX
 1:N
 O colaborador é posicionado no Nine Box (RF 2.2) para cada ciclo de desempenho concluído.
