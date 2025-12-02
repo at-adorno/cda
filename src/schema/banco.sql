@@ -3,7 +3,7 @@
 -- Baseado nas especificações do MVP.
 -- ==========================================================
 
--- 1. PERFIL_ACESSO
+-- 1. PERFIL (Antiga PERFIL_ACESSO)
 CREATE TABLE public.perfil (
     id BIGSERIAL NOT NULL,
     nome character varying NOT NULL UNIQUE,
