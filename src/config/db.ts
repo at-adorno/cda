@@ -1,7 +1,7 @@
 /*
 Este arquivo configura e exporta o Pool (Singleton), lendo as credenciais de forma segura.
 TypeScript
-src/database/db.ts
+src/config/db.ts
 */
 
 import * as dotenv from 'dotenv';

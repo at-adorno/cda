@@ -152,6 +152,43 @@ npm start
 npm test
 ```
 
+### Testar Conexão com o Banco
+
+Um script utilitário foi adicionado para verificar rapidamente a conexão com o PostgreSQL usando o pool definido em `src/config/db.ts`.
+
+- **Comando:**
+
+```bash
+npm run test-db
+```
+
+- **O que ele faz:**
+   - Lê variáveis em `.env` (veja abaixo).
+   - Imprime as variáveis de conexão (senha oculta por padrão).
+   - Executa `SELECT NOW()` para validar a conexão e encerra o pool.
+
+- **Mostrar senha (apenas para debug):**
+
+```bash
+SHOW_DB_PASSWORD=1 npm run test-db
+```
+
+- **Variáveis necessárias no `.env`:**
+
+```dotenv
+# Exemplo mínimo (.env)
+DB_USER=seu_usuario
+DB_HOST=seu_host_do_postgres
+DB_DATABASE=seu_banco
+DB_PASSWORD=sua_senha
+DB_PORT=5432
+```
+
+- **Observações de segurança:**
+   - Não comite o arquivo `.env` no repositório. Adicione-o ao `.gitignore` se ainda não estiver.
+   - Use `DATABASE_URL` em serviços/CI quando suportado, mas evite expor segredos em logs.
+
+
 ---
 
 ## 💾 Banco de Dados
