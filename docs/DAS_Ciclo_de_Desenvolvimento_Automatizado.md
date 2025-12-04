@@ -31,18 +31,13 @@
 ciclo-desempenho-backend/
 ├── src/
 │   ├── config/         # Configurações (DB, Redis, Swagger)
-│   ├── models/         # Interfaces e tipos TypeScript
-│   ├── repositories/   # Acesso a dados (queries SQL)
-│   ├── services/       # Lógica de negócio
-│   ├── controllers/    # Controladores HTTP
-│   ├── routes/         # Definição de rotas
-│   ├── middlewares/    # Autenticação, validação
-│   ├── jobs/           # Filas Redis
-│   ├── utils/          # Funções auxiliares
+│   ├── repositories/   # Acesso a dados (queries SQL, CRUD por entidade)
+│   ├── services/       # Lógica de negócio, validações, orquestração
+│   ├── controlers/     # Controladores HTTP (Express)
+│   ├── routes/         # Definição de rotas Express
 │   ├── app.ts          # Configuração Express
 │   └── server.ts       # Inicialização
 ├── public/              # Tela do colaborador
 ├── scripts/             # Scripts SQL
 ├── docs/                # Documentação
-└── tests/               # Testes (opcional)
 ```
