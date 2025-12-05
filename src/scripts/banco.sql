@@ -4,7 +4,7 @@
 -- ==========================================================
 
 -- 1. PERFIL (Antiga PERFIL_ACESSO)
-CREATE TABLE public.perfil (
+CREATE TABLE IF NOT EXISTS public.perfil (
     id BIGSERIAL NOT NULL,
     nome character varying NOT NULL UNIQUE,
     descricao text,
@@ -14,7 +14,7 @@ CREATE TABLE public.perfil (
 );
 
 -- 2. CARGO (Base)
-CREATE TABLE public.cargo (
+CREATE TABLE IF NOT EXISTS public.cargo (
     id BIGSERIAL NOT NULL,
     titulo character varying NOT NULL UNIQUE,
     descricao text,
@@ -24,7 +24,7 @@ CREATE TABLE public.cargo (
 );
 
 -- 3. USUARIO (Base)
-CREATE TABLE public.usuario (
+CREATE TABLE IF NOT EXISTS public.usuario (
     id BIGSERIAL NOT NULL,
     email character varying NOT NULL UNIQUE,
     nome character varying,
@@ -37,7 +37,7 @@ CREATE TABLE public.usuario (
 );
 
 -- 4. COLABORADOR (Base) - Relação recursiva para Gestor
-CREATE TABLE public.colaborador (
+CREATE TABLE IF NOT EXISTS public.colaborador (
     id BIGSERIAL NOT NULL,
     usuario_id BIGINT UNIQUE, -- FK para login e perfil de acesso (Opcional, mas único)
     nome character varying NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE public.colaborador (
 );
 
 -- 5. CICLO_DESEMPENHO (Base)
-CREATE TABLE public.ciclo_desempenho (
+CREATE TABLE IF NOT EXISTS public.ciclo_desempenho (
     id BIGSERIAL NOT NULL,
     nome character varying NOT NULL UNIQUE,
     data_inicio date NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE public.ciclo_desempenho (
 );
 
 -- 5.1. CICLO_COLABORADOR (Tabela de Junção Central N:M)
-CREATE TABLE public.ciclo_colaborador (
+CREATE TABLE IF NOT EXISTS public.ciclo_colaborador (
     id BIGSERIAL NOT NULL,
     ciclo_id BIGINT NOT NULL,
     colaborador_id BIGINT NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE public.ciclo_colaborador (
 );
 
 -- 6. COMPETENCIA (Itens de Avaliação)
-CREATE TABLE public.competencia (
+CREATE TABLE IF NOT EXISTS public.competencia (
     id BIGSERIAL NOT NULL,
     nome character varying NOT NULL UNIQUE,
     descricao text,
@@ -94,7 +94,7 @@ CREATE TABLE public.competencia (
 );
 
 -- 7. META (Itens de Avaliação)
-CREATE TABLE public.meta (
+CREATE TABLE IF NOT EXISTS public.meta (
     id BIGSERIAL NOT NULL,
     titulo character varying NOT NULL,
     descricao text,
@@ -106,7 +106,7 @@ CREATE TABLE public.meta (
 );
 
 -- 8. AVALIACAO (Cabeçalho da Avaliação)
-CREATE TABLE public.avaliacao (
+CREATE TABLE IF NOT EXISTS public.avaliacao (
     id BIGSERIAL NOT NULL,
     ciclo_colaborador_id BIGINT NOT NULL, -- FK para o relacionamento Colaborador-Ciclo
     avaliador_id BIGINT NOT NULL,
@@ -124,7 +124,7 @@ CREATE TABLE public.avaliacao (
 );
 
 -- 9. PONTUACAO (Detalhamento da Nota/Feedback por Item) - Antiga RESULTADO_AVALIACAO
-CREATE TABLE public.pontuacao (
+CREATE TABLE IF NOT EXISTS public.pontuacao (
     id BIGSERIAL NOT NULL,
     avaliacao_id BIGINT NOT NULL,
     competencia_id BIGINT, -- Item Opcional
@@ -145,7 +145,7 @@ CREATE TABLE public.pontuacao (
 );
 
 -- 10. NINE_BOX (Resultado Final do Ciclo) - Antiga METRICA_MERITO
-CREATE TABLE public.nine_box (
+CREATE TABLE IF NOT EXISTS public.nine_box (
     id BIGSERIAL NOT NULL,
     ciclo_colaborador_id BIGINT NOT NULL, -- FK para o relacionamento Colaborador-Ciclo
     posicao_x_potencial character varying NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE public.nine_box (
 );
 
 -- 11. PLANO_CARREIRA (Base)
-CREATE TABLE public.plano_carreira (
+CREATE TABLE IF NOT EXISTS public.plano_carreira (
     id BIGSERIAL NOT NULL,
     nome character varying NOT NULL UNIQUE,
     descricao text,
@@ -175,7 +175,7 @@ CREATE TABLE public.plano_carreira (
 );
 
 -- 12. COLABORADOR_TRILHA (Liberação de Plano de Carreira) - Antiga TRILHA_COLABORADOR
-CREATE TABLE public.colaborador_trilha (
+CREATE TABLE IF NOT EXISTS public.colaborador_trilha (
     id BIGSERIAL NOT NULL,
     plano_id BIGINT NOT NULL,
     colaborador_id BIGINT NOT NULL,
@@ -191,7 +191,7 @@ CREATE TABLE public.colaborador_trilha (
 );
 
 -- 13. COLABORADOR_IMPORT (Tabela de Staging para Importação)
-CREATE TABLE public.colaborador_import (
+CREATE TABLE IF NOT EXISTS public.colaborador_import (
     id BIGSERIAL NOT NULL,
     matricula character varying NOT NULL,
     nome_completo character varying NOT NULL,

@@ -3,12 +3,12 @@ Este arquivo agora concentra as funções de setup (conexão/migração) e a ló
 TypeScript
 src/index.ts
 */
-import pool from './config/db.js';
+import pool from './config/db.ts';
 import * as fs from 'fs/promises';
 import * as readline from 'readline/promises';
 import { stdin as input, stdout as output } from 'process';
 
-const INIT_SCHEMA_PATH = './src/schema/init.sql';
+const INIT_SCHEMA_PATH = './src/scripts/banco.sql';
 const rl = readline.createInterface({ input, output });
 
 // Tipos simples usados pela CLI

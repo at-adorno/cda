@@ -1,4 +1,4 @@
-import pool from '../config/db.js';
+import pool from '../config/db.ts';
 
 export const usuarioRepository = {
   async create(email: string, nome: string | null, perfil_id: number | null, senha_hash: string | null) {
