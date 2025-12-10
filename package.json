@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Ciclo de Desempenho Automatizado",
   "type": "module",
-  "main": "index.js",
+  "main": "app.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "ts-node src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test-db": "ts-node src/scripts/test-db-connection.ts",
     "check-schema": "ts-node src/scripts/check-schema.ts"
