@@ -1,4 +1,4 @@
-import { usuarioRepository } from '../repositories/UsuarioRepository.js';
+import { usuarioRepository } from '../repositories/UsuarioRepository.ts';
 
 export const usuarioService = {
   async createUsuario(data: { email: string; nome?: string; perfil_id?: number | null; senha_hash?: string | null }) {
