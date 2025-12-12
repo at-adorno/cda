@@ -3,8 +3,8 @@ export interface Ciclo {
   nome: string;
   dataInicio: Date;
   dataFim: Date;
-  status: 'planejamento' | 'em_progresso' | 'encerrado';
   descricao?: string;
+  criadoPor?: number; // FK para usuario_id
   criadoEm?: Date;
   atualizadoEm?: Date;
 }
