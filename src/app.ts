@@ -11,6 +11,7 @@ import cargoRoutes from './routes/cargoRoute.ts';
 import avaliacaoRoutes from './routes/avaliacaoRoute.ts';
 import pontuacaoRoutes from './routes/pontuacaoRoutes.ts';
 import nineBoxRoutes from './routes/nineBoxRoutes.ts';
+import gestorRoutes from './routes/gestorRoutes.ts';
 
 const app = express();
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use('/api/cargos', cargoRoutes);
 app.use('/api/avaliacoes', avaliacaoRoutes);
 app.use('/api/pontuacoes', pontuacaoRoutes);
 app.use('/api/nineBoxes', nineBoxRoutes);
+app.use('/api/gestores', gestorRoutes);
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 
