@@ -1,4 +1,5 @@
 import express from 'express';
+import perfilRoutes from './routes/perfilRoutes.ts';
 import usuarioRoutes from './routes/usuarioRoutes.ts';
 import cicloColaboradorRoutes from './routes/cicloColaboradorRoutes.ts';
 import cicloDesempenhoRoutes from './routes/cicloDesempenhoRoutes.ts';
@@ -17,6 +18,7 @@ app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/competencias', competenciaRoutes);
 app.use('/api/metas', metaRoutes);
 app.use('/api/planoCarreiras', planoCarreiraRoutes);
+app.use('/api/perfis', perfilRoutes);
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 
