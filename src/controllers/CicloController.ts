@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CicloService } from '../services/CicloService';
+import { CicloDesempenhoService } from '.././services/CicloDesempenhoService/CicloService';
 
 const servico = new CicloService();
 
