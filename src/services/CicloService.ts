@@ -1,5 +1,5 @@
 import CicloRepository from '../repositories/CicloRepository';
-import { Ciclo } from '../types/Ciclo';
+import { CicloDesempenho } from '.././types/CicloDesempenho/Ciclo';
 
 class CicloService {
   private cicloRepository = new CicloRepository();
