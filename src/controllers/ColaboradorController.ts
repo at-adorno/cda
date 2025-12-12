@@ -49,6 +49,39 @@ class ColaboradorController {
     }
     res.json({ mensagem: 'Colaborador removido com sucesso' });
   };
+
+  obterAvaliacaoCompleta = (req: Request, res: Response) => {
+  try {
+    const { id, cicloId } = req.params;
+    if (!cicloId) {
+      return res.status(400).json({ success: false, erro: 'cicloId é obrigatório' });
+    }
+    const avaliacao = this.colaboradorService.obterAvaliacaoCompleta(
+      Number(id),
+      Number(cicloId),
+    );
+    res.status(200).json({ success: true, avaliacao });
+  } catch (erro) {
+    res.status(404).json({ success: false, erro: (erro as Error).message });
+  }
+};
+
+obterCompetenciasDetalhes = (req: Request, res: Response) => {
+  try {
+    const { id, cicloId } = req.params;
+    if (!cicloId) {
+      return res.status(400).json({ success: false, erro: 'cicloId é obrigatório' });
+    }
+    const competencias = this.colaboradorService.obterCompetenciasDetalhes(
+      Number(id),
+      Number(cicloId),
+    );
+    res.status(200).json({ success: true, competencias });
+  } catch (erro) {
+    res.status(404).json({ success: false, erro: (erro as Error).message });
+  }
+};
+
 }
 
 export default new ColaboradorController();
