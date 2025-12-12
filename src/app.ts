@@ -8,6 +8,9 @@ import competenciaRoutes from './routes/competenciaRoutes.ts';
 import metaRoutes from './routes/metaRoutes.ts';
 import planoCarreiraRoutes from './routes/planoCarreiraRoutes.ts';
 import cargoRoutes from './routes/cargoRoute.ts';
+import avaliacaoRoutes from './routes/avaliacaoRoute.ts';
+import pontuacaoRoutes from './routes/pontuacaoRoutes.ts';
+import nineBoxRoutes from './routes/nineBoxRoutes.ts';
 
 const app = express();
 app.use(express.json());
@@ -21,6 +24,9 @@ app.use('/api/metas', metaRoutes);
 app.use('/api/planoCarreiras', planoCarreiraRoutes);
 app.use('/api/perfil', perfilRoutes);
 app.use('/api/cargos', cargoRoutes);
+app.use('/api/avaliacoes', avaliacaoRoutes);
+app.use('/api/pontuacoes', pontuacaoRoutes);
+app.use('/api/nineBoxes', nineBoxRoutes);
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 
