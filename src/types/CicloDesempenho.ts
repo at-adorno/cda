@@ -1,4 +1,4 @@
-export interface Ciclo {
+export interface CicloDesempenho {
   id?: number;
   nome: string;
   dataInicio: Date;
