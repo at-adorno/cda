@@ -1,5 +1,5 @@
 import { pool } from '../config/db';
-import { Ciclo } from '../types/Ciclo';
+import { CicloDesempenho } from '.././types/CicloDesempenho/Ciclo';
 
 export class CicloRepository {
   async listarTodos(): Promise<Ciclo[]> {
