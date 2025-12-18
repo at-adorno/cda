@@ -1,16 +1,12 @@
 import { Router } from 'express';
-import { NineBoxController } from '../controllers/NineBoxController';
+import NineBoxController from '../controllers/NineBoxController';
 
-const roteador = Router();
-const nineBox = new NineBoxController();
+const router = Router();
 
-roteador.get('/', nineBox.listarTodos.bind(nineBox));
-roteador.get('/:id', nineBox.buscarPorId.bind(nineBox));
-roteador.get('/colaborador/:colaboradorId', nineBox.buscarPorColaboradorId.bind(nineBox));
-roteador.get('/ciclo/:cicloId', nineBox.buscarPorCicloId.bind(nineBox));
-roteador.get('/quadrante/:quadrante', nineBox.buscarPorQuadrante.bind(nineBox));
-roteador.post('/', nineBox.criar.bind(nineBox));
-roteador.put('/:id', nineBox.atualizar.bind(nineBox));
-roteador.delete('/:id', nineBox.remover.bind(nineBox));
+router.post('/', NineBoxController.create);
+router.get('/', NineBoxController.findAll);
+router.get('/:id', NineBoxController.findById);
+router.put('/:id', NineBoxController.update);
+router.delete('/:id', NineBoxController.delete);
 
-export default roteador;
+export default router;

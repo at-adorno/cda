@@ -1,78 +1,59 @@
+import db from '../config/db';
 import { NineBox } from '../types/NineBox';
 
-export class NineBoxRepository {
-  private nineBoxes: NineBox[] = [];
-  private nextId = 1;
-
-  listar(): NineBox[] {
-    return this.nineBoxes;
-  }
-
-  buscarPorId(id: number): NineBox | undefined {
-    return this.nineBoxes.find(n => n.id === id);
-  }
-
-  buscarPorColaboradorId(colaboradorId: number): NineBox[] {
-    return this.nineBoxes.filter(n => n.colaboradorId === colaboradorId);
-  }
-
-  buscarPorCicloId(cicloId: number): NineBox[] {
-    return this.nineBoxes.filter(n => n.cicloId === cicloId);
-  }
-
-  buscarPorQuadrante(quadrante: string): NineBox[] {
-    return this.nineBoxes.filter(n => n.quadrante === quadrante);
-  }
-
-  criar(nineBox: NineBox): NineBox {
-    const quadrante = this.calcularQuadrante(nineBox.potencial, nineBox.desempenho);
-    const novoNineBox = {
-      ...nineBox,
-      id: this.nextId++,
-      quadrante,
-      dataCriacao: new Date()
-    };
-    this.nineBoxes.push(novoNineBox);
-    return novoNineBox;
-  }
-
-  atualizar(id: number, nineBox: Partial<NineBox>): NineBox | undefined {
-    const index = this.nineBoxes.findIndex(n => n.id === id);
-    if (index !== -1) {
-      const atual = this.nineBoxes[index];
-      const potencial = nineBox.potencial || atual.potencial;
-      const desempenho = nineBox.desempenho || atual.desempenho;
-      const quadrante = this.calcularQuadrante(potencial, desempenho);
-
-      this.nineBoxes[index] = {
-        ...this.nineBoxes[index],
-        ...nineBox,
-        quadrante,
-        dataAtualizacao: new Date()
-      };
-      return this.nineBoxes[index];
+class NineBoxRepository {
+    async create(nineBox: NineBox): Promise<NineBox> {
+        const query = `
+            INSERT INTO nine_box (
+                ciclo_colaborador_id, posicao_x_potencial, posicao_y_desempenho,
+                score_competencias, score_metas, score_final_merito, elegivel_carreira
+            )
+            VALUES ($1,$2,$3,$4,$5,$6,$7)
+            RETURNING *`;
+        const values = [
+            nineBox.ciclo_colaborador_id,
+            nineBox.posicao_x_potencial,
+            nineBox.posicao_y_desempenho,
+            nineBox.score_competencias,
+            nineBox.score_metas,
+            nineBox.score_final_merito,
+            nineBox.elegivel_carreira
+        ];
+        const { rows } = await db.query(query, values);
+        return rows[0];
     }
-    return undefined;
-  }
 
-  remover(id: number): boolean {
-    const index = this.nineBoxes.findIndex(n => n.id === id);
-    if (index !== -1) {
-      this.nineBoxes.splice(index, 1);
-      return true;
+    async findAll(): Promise<NineBox[]> {
+        const { rows } = await db.query('SELECT * FROM nine_box');
+        return rows;
     }
-    return false;
-  }
 
-  private calcularQuadrante(potencial: string, desempenho: string): string {
-    if (potencial === 'alto' && desempenho === 'alto') return 'Estrela (High Potential, High Performer)';
-    if (potencial === 'alto' && desempenho === 'medio') return 'Promissor (High Potential, Medium Performer)';
-    if (potencial === 'alto' && desempenho === 'baixo') return 'Questionável (High Potential, Low Performer)';
-    if (potencial === 'medio' && desempenho === 'alto') return 'Desempenho Sólido (Medium Potential, High Performer)';
-    if (potencial === 'medio' && desempenho === 'medio') return 'Consistente (Medium Potential, Medium Performer)';
-    if (potencial === 'medio' && desempenho === 'baixo') return 'Desenvolvimento Necessário (Medium Potential, Low Performer)';
-    if (potencial === 'baixo' && desempenho === 'alto') return 'Especialista (Low Potential, High Performer)';
-    if (potencial === 'baixo' && desempenho === 'medio') return 'Manutenção (Low Potential, Medium Performer)';
-    return 'Saída (Low Potential, Low Performer)';
-  }
+    async findById(id: number): Promise<NineBox | null> {
+        const { rows } = await db.query('SELECT * FROM nine_box WHERE id = $1', [id]);
+        return rows[0] || null;
+    }
+
+    async update(id: number, patch: Partial<NineBox>): Promise<NineBox> {
+        const fields: string[] = [];
+        const values: any[] = [];
+        let i = 1;
+
+        for (const key in patch) {
+            fields.push(`${key} = $${i}`);
+            // @ts-ignore
+            values.push(patch[key]);
+            i++;
+        }
+
+        values.push(id);
+        const query = `UPDATE nine_box SET ${fields.join(', ')}, updated_at = now() WHERE id = $${i} RETURNING *`;
+        const { rows } = await db.query(query, values);
+        return rows[0];
+    }
+
+    async delete(id: number): Promise<void> {
+        await db.query('DELETE FROM nine_box WHERE id = $1', [id]);
+    }
 }
+
+export default new NineBoxRepository();

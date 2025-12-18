@@ -1,30 +1,26 @@
+import MetaRepository from '../repositories/MetaRepository';
 import { Meta } from '../types/Meta';
-import { MetaRepository } from '../repositories/MetaRepository';
 
-const repositorio = new MetaRepository();
+export default class MetaService {
+  private repo = new MetaRepository();
 
-export class MetaService {
-  async listarTodos() {
-    return repositorio.listar();
+  async list(): Promise<Meta[]> {
+    return this.repo.findAll();
   }
 
-  async buscarPorId(id: number) {
-    const meta = await repositorio.buscarPorId(id);
-    if (!meta) throw new Error('META_NAO_ENCONTRADA');
-    return meta;
+  async getById(id: number): Promise<Meta | null> {
+    return this.repo.findById(id);
   }
 
-  async criar(dados: Meta) {
-    return repositorio.criar(dados);
+  async create(data: Partial<Meta>): Promise<Meta> {
+    return this.repo.create(data);
   }
 
-  async atualizar(id: number, dados: Partial<Meta>) {
-    const atualizado = await repositorio.atualizar(id, dados);
-    if (!atualizado) throw new Error('META_NAO_ENCONTRADA');
-    return atualizado;
+  async update(id: number, data: Partial<Meta>): Promise<Meta | null> {
+    return this.repo.update(id, data);
   }
 
-  async remover(id: number) {
-    return repositorio.remover(id);
+  async delete(id: number): Promise<void> {
+    return this.repo.delete(id);
   }
 }

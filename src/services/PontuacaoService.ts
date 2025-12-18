@@ -1,45 +1,26 @@
+import PontuacaoRepository from '../repositories/PontuacaoRepository';
 import { Pontuacao } from '../types/Pontuacao';
-import { PontuacaoRepository } from '../repositories/PontuacaoRepository';
 
-const repositorio = new PontuacaoRepository();
+class PontuacaoService {
+    async create(pontuacao: Pontuacao) {
+        return PontuacaoRepository.create(pontuacao);
+    }
 
-export class PontuacaoService {
-  async listarTodos() {
-    return repositorio.listar();
-  }
+    async findAll() {
+        return PontuacaoRepository.findAll();
+    }
 
-  async buscarPorId(id: number) {
-    const pontuacao = await repositorio.buscarPorId(id);
-    if (!pontuacao) throw new Error('PONTUACAO_NAO_ENCONTRADA');
-    return pontuacao;
-  }
+    async findById(id: number) {
+        return PontuacaoRepository.findById(id);
+    }
 
-  async buscarPorColaboradorId(colaboradorId: number) {
-    return repositorio.buscarPorColaboradorId(colaboradorId);
-  }
+    async update(id: number, patch: Partial<Pontuacao>) {
+        return PontuacaoRepository.update(id, patch);
+    }
 
-  async buscarPorCicloId(cicloId: number) {
-    return repositorio.buscarPorCicloId(cicloId);
-  }
-
-  async calcularTotalPorColaborador(colaboradorId: number) {
-    return repositorio.calcularTotalPorColaborador(colaboradorId);
-  }
-
-  async criar(dados: Pontuacao) {
-    return repositorio.criar(dados);
-  }
-
-  async atualizar(id: number, dados: Partial<Pontuacao>) {
-    const pontuacao = await repositorio.buscarPorId(id);
-    if (!pontuacao) throw new Error('PONTUACAO_NAO_ENCONTRADA');
-    
-    const atualizado = await repositorio.atualizar(id, dados);
-    if (!atualizado) throw new Error('PONTUACAO_NAO_ENCONTRADA');
-    return atualizado;
-  }
-
-  async remover(id: number) {
-    return repositorio.remover(id);
-  }
+    async delete(id: number) {
+        return PontuacaoRepository.delete(id);
+    }
 }
+
+export default new PontuacaoService();

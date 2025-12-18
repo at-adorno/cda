@@ -1,28 +1,30 @@
-import CicloRepository from '../repositories/CicloRepository';
-import { CicloDesempenho } from '.././types/CicloDesempenho/Ciclo';
+import { CicloDesempenho } from '../types/CicloDesempenho';
+import { cicloDesempenhoRepository } from '../repositories/CicloDesempenhoRepository';
 
-class CicloService {
-  private cicloRepository = new CicloRepository();
+export const cicloDesempenhoService = {
+  async listarTodos() {
+    return cicloDesempenhoRepository.findAll();
+  },
 
-  listarTodos(): Ciclo[] {
-    return this.cicloRepository.listar();
-  }
+  async obterPorId(id: number) {
+    const ciclo = await cicloDesempenhoRepository.findById(id);
+    if (!ciclo) throw new Error('CICLO_NAO_ENCONTRADO');
+    return ciclo;
+  },
 
-  buscarPorId(id: number): Ciclo | undefined {
-    return this.cicloRepository.buscarPorId(id);
-  }
+  async criar(dados: CicloDesempenho) {
+    const existente = await cicloDesempenhoRepository.findByNome(dados.nome);
+    if (existente) throw new Error('NOME_JA_EXISTE');
+    return cicloDesempenhoRepository.create(dados);
+  },
 
-  criar(ciclo: Omit<Ciclo, 'id'>): Ciclo {
-    return this.cicloRepository.criar(ciclo);
-  }
+  async atualizar(id: number, patch: Partial<CicloDesempenho>) {
+    const atualizado = await cicloDesempenhoRepository.update(id, patch);
+    if (!atualizado) throw new Error('CICLO_NAO_ENCONTRADO');
+    return atualizado;
+  },
 
-  atualizar(id: number, ciclo: Partial<Omit<Ciclo, 'id'>>): Ciclo | undefined {
-    return this.cicloRepository.atualizar(id, ciclo);
-  }
-
-  remover(id: number): boolean {
-    return this.cicloRepository.remover(id);
-  }
-}
-
-export default new CicloService();
+  async remover(id: number) {
+    await cicloDesempenhoRepository.delete(id);
+  },
+};

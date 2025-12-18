@@ -2,69 +2,31 @@ import { Request, Response } from 'express';
 import AvaliacaoService from '../services/AvaliacaoService';
 
 class AvaliacaoController {
-  private avaliacaoService = new AvaliacaoService();
-
-  listarTodos = (req: Request, res: Response) => {
-    const avaliacoes = this.avaliacaoService.listarTodos();
-    res.json(avaliacoes);
-  };
-
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const avaliacao = this.avaliacaoService.buscarPorId(Number(id));
-    if (!avaliacao) {
-      return res.status(404).json({ erro: 'Avaliação não encontrada' });
+    async create(req: Request, res: Response) {
+        const avaliacao = await AvaliacaoService.create(req.body);
+        res.status(201).json(avaliacao);
     }
-    res.json(avaliacao);
-  };
 
-  buscarPorColaboradorId = (req: Request, res: Response) => {
-    const { colaboradorId } = req.params;
-    const avaliacoes = this.avaliacaoService.buscarPorColaboradorId(Number(colaboradorId));
-    res.json(avaliacoes);
-  };
-
-  buscarPorCicloId = (req: Request, res: Response) => {
-    const { cicloId } = req.params;
-    const avaliacoes = this.avaliacaoService.buscarPorCicloId(Number(cicloId));
-    res.json(avaliacoes);
-  };
-
-  criar = (req: Request, res: Response) => {
-    const { colaboradorId, cicloId, avaliador, notas, desempenho, comportamento, pontualidade, qualidade, status } = req.body;
-    const novaAvaliacao = this.avaliacaoService.criar({
-      colaboradorId,
-      cicloId,
-      avaliador,
-      notas,
-      desempenho,
-      comportamento,
-      pontualidade,
-      qualidade,
-      status,
-      media: 0
-    });
-    res.status(201).json(novaAvaliacao);
-  };
-
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const dados = req.body;
-    const atualizado = this.avaliacaoService.atualizar(Number(id), dados);
-    if (!atualizado) {
-      return res.status(404).json({ erro: 'Avaliação não encontrada' });
+    async findAll(req: Request, res: Response) {
+        const avaliacoes = await AvaliacaoService.findAll();
+        res.json(avaliacoes);
     }
-    res.json(atualizado);
-  };
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const removido = this.avaliacaoService.remover(Number(id));
-    if (!removido) {
-      return res.status(404).json({ erro: 'Avaliação não encontrada' });
+    async findById(req: Request, res: Response) {
+        const avaliacao = await AvaliacaoService.findById(Number(req.params.id));
+        if (!avaliacao) return res.status(404).json({ message: 'Avaliação não encontrada' });
+        res.json(avaliacao);
     }
-    res.status(204).send();
-  };
+
+    async update(req: Request, res: Response) {
+        const avaliacao = await AvaliacaoService.update(Number(req.params.id), req.body);
+        res.json(avaliacao);
+    }
+
+    async delete(req: Request, res: Response) {
+        await AvaliacaoService.delete(Number(req.params.id));
+        res.status(204).send();
+    }
 }
 
 export default new AvaliacaoController();

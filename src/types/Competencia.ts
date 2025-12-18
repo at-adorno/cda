@@ -3,6 +3,6 @@ export interface Competencia {
   nome: string;
   descricao?: string;
   peso: number;
-  criadoEm: Date;
-  atualizadoEm: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }

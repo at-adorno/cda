@@ -1,30 +1,26 @@
+import CompetenciaRepository from '../repositories/CompetenciaRepository';
 import { Competencia } from '../types/Competencia';
-import { CompetenciaRepository } from '../repositories/CompetenciaRepository';
 
-const repositorio = new CompetenciaRepository();
+export default class CompetenciaService {
+  private repo = new CompetenciaRepository();
 
-export class CompetenciaService {
-  async listarTodos() {
-    return repositorio.listar();
+  async list(): Promise<Competencia[]> {
+    return this.repo.findAll();
   }
 
-  async buscarPorId(id: number) {
-    const competencia = await repositorio.buscarPorId(id);
-    if (!competencia) throw new Error('COMPETENCIA_NAO_ENCONTRADA');
-    return competencia;
+  async getById(id: number): Promise<Competencia | null> {
+    return this.repo.findById(id);
   }
 
-  async criar(dados: Competencia) {
-    return repositorio.criar(dados);
+  async create(data: Partial<Competencia>): Promise<Competencia> {
+    return this.repo.create(data);
   }
 
-  async atualizar(id: number, dados: Partial<Competencia>) {
-    const atualizado = await repositorio.atualizar(id, dados);
-    if (!atualizado) throw new Error('COMPETENCIA_NAO_ENCONTRADA');
-    return atualizado;
+  async update(id: number, data: Partial<Competencia>): Promise<Competencia | null> {
+    return this.repo.update(id, data);
   }
 
-  async remover(id: number) {
-    return repositorio.remover(id);
+  async delete(id: number): Promise<void> {
+    return this.repo.delete(id);
   }
 }

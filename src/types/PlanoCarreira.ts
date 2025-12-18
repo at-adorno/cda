@@ -4,6 +4,6 @@ export interface PlanoCarreira {
   descricao?: string;
   versao?: string;
   publicado: boolean;
-  criadoEm: Date;
-  atualizadoEm: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }

@@ -1,14 +1,12 @@
 import { Router } from 'express';
-import { CicloController } from '../controllers/CicloController';
+import { cicloDesempenhoController } from '../controllers/CicloDesempenhoController';
 
-const roteador = Router();
-const controlador = new CicloController();
+const router = Router();
 
-roteador.get('/', controlador.obterTodos.bind(controlador));
-roteador.get('/:id', controlador.obterPorId.bind(controlador));
-roteador.post('/', controlador.criar.bind(controlador));
-roteador.put('/:id', controlador.atualizar.bind(controlador));
-roteador.delete('/:id', controlador.remover.bind(controlador));
-roteador.patch('/:id/encerrar', controlador.encerrar.bind(controlador));
+router.get('/', cicloDesempenhoController.listarTodos);
+router.get('/:id', cicloDesempenhoController.obterPorId);
+router.post('/', cicloDesempenhoController.criar);
+router.put('/:id', cicloDesempenhoController.atualizar);
+router.delete('/:id', cicloDesempenhoController.remover);
 
-export default roteador;
+export default router;

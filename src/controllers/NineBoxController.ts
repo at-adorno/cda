@@ -2,72 +2,31 @@ import { Request, Response } from 'express';
 import NineBoxService from '../services/NineBoxService';
 
 class NineBoxController {
-  private nineBoxService = new NineBoxService();
-
-  listarTodos = (req: Request, res: Response) => {
-    const nineBoxes = this.nineBoxService.listarTodos();
-    res.json(nineBoxes);
-  };
-
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const nineBox = this.nineBoxService.buscarPorId(Number(id));
-    if (!nineBox) {
-      return res.status(404).json({ erro: 'Nine Box não encontrado' });
+    async create(req: Request, res: Response) {
+        const nineBox = await NineBoxService.create(req.body);
+        res.status(201).json(nineBox);
     }
-    res.json(nineBox);
-  };
 
-  buscarPorColaboradorId = (req: Request, res: Response) => {
-    const { colaboradorId } = req.params;
-    const nineBoxes = this.nineBoxService.buscarPorColaboradorId(Number(colaboradorId));
-    res.json(nineBoxes);
-  };
-
-  buscarPorCicloId = (req: Request, res: Response) => {
-    const { cicloId } = req.params;
-    const nineBoxes = this.nineBoxService.buscarPorCicloId(Number(cicloId));
-    res.json(nineBoxes);
-  };
-
-  buscarPorQuadrante = (req: Request, res: Response) => {
-    const { quadrante } = req.params;
-    const nineBoxes = this.nineBoxService.buscarPorQuadrante(quadrante);
-    res.json(nineBoxes);
-  };
-
-  criar = (req: Request, res: Response) => {
-    const { colaboradorId, cicloId, potencial, desempenho, recomendacao, planoDesenvolvimento } = req.body;
-    const novoNineBox = this.nineBoxService.criar({
-      colaboradorId,
-      cicloId,
-      potencial,
-      desempenho,
-      recomendacao,
-      planoDesenvolvimento,
-      quadrante: ''
-    });
-    res.status(201).json(novoNineBox);
-  };
-
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const dados = req.body;
-    const atualizado = this.nineBoxService.atualizar(Number(id), dados);
-    if (!atualizado) {
-      return res.status(404).json({ erro: 'Nine Box não encontrado' });
+    async findAll(req: Request, res: Response) {
+        const nineBoxes = await NineBoxService.findAll();
+        res.json(nineBoxes);
     }
-    res.json(atualizado);
-  };
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const removido = this.nineBoxService.remover(Number(id));
-    if (!removido) {
-      return res.status(404).json({ erro: 'Nine Box não encontrado' });
+    async findById(req: Request, res: Response) {
+        const nineBox = await NineBoxService.findById(Number(req.params.id));
+        if (!nineBox) return res.status(404).json({ message: 'NineBox não encontrado' });
+        res.json(nineBox);
     }
-    res.status(204).send();
-  };
+
+    async update(req: Request, res: Response) {
+        const nineBox = await NineBoxService.update(Number(req.params.id), req.body);
+        res.json(nineBox);
+    }
+
+    async delete(req: Request, res: Response) {
+        await NineBoxService.delete(Number(req.params.id));
+        res.status(204).send();
+    }
 }
 
 export default new NineBoxController();

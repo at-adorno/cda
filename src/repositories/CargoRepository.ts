@@ -1,46 +1,38 @@
+import db from '../config/db';
 import { Cargo } from '../types/Cargo';
 
-export class CargoRepository {
-  private cargos: Cargo[] = [];
-  private nextId = 1;
-
-  listar(): Cargo[] {
-    return this.cargos;
+export default class CargoRepository {
+  async findAll(): Promise<Cargo[]> {
+    const { rows } = await db.query('SELECT * FROM cargo');
+    return rows;
   }
 
-  buscarPorId(id: number): Cargo | undefined {
-    return this.cargos.find(c => c.id === id);
+  async findById(id: number): Promise<Cargo | null> {
+    const { rows } = await db.query('SELECT * FROM cargo WHERE id=$1', [id]);
+    return rows[0] || null;
   }
 
-  criar(cargo: Cargo): Cargo {
-    const novoCargo = {
-      ...cargo,
-      id: this.nextId++,
-      dataCriacao: new Date()
-    };
-    this.cargos.push(novoCargo);
-    return novoCargo;
+  async create(data: Partial<Cargo>): Promise<Cargo> {
+    const { titulo, descricao } = data;
+    const { rows } = await db.query(
+      `INSERT INTO cargo (titulo, descricao)
+       VALUES ($1, $2) RETURNING *`,
+      [titulo, descricao || null]
+    );
+    return rows[0];
   }
 
-  atualizar(id: number, cargo: Partial<Cargo>): Cargo | undefined {
-    const index = this.cargos.findIndex(c => c.id === id);
-    if (index !== -1) {
-      this.cargos[index] = {
-        ...this.cargos[index],
-        ...cargo,
-        dataAtualizacao: new Date()
-      };
-      return this.cargos[index];
-    }
-    return undefined;
+  async update(id: number, data: Partial<Cargo>): Promise<Cargo | null> {
+    const { titulo, descricao } = data;
+    const { rows } = await db.query(
+      `UPDATE cargo SET titulo=$1, descricao=$2, updated_at=now()
+       WHERE id=$3 RETURNING *`,
+      [titulo, descricao || null, id]
+    );
+    return rows[0] || null;
   }
 
-  remover(id: number): boolean {
-    const index = this.cargos.findIndex(c => c.id === id);
-    if (index !== -1) {
-      this.cargos.splice(index, 1);
-      return true;
-    }
-    return false;
+  async delete(id: number): Promise<void> {
+    await db.query('DELETE FROM cargo WHERE id=$1', [id]);
   }
 }

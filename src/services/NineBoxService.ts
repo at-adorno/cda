@@ -1,45 +1,26 @@
+import NineBoxRepository from '../repositories/NineBoxRepository';
 import { NineBox } from '../types/NineBox';
-import { NineBoxRepository } from '../repositories/NineBoxRepository';
 
-const repositorio = new NineBoxRepository();
+class NineBoxService {
+    async create(nineBox: NineBox) {
+        return NineBoxRepository.create(nineBox);
+    }
 
-export class NineBoxService {
-  async listarTodos() {
-    return repositorio.listar();
-  }
+    async findAll() {
+        return NineBoxRepository.findAll();
+    }
 
-  async buscarPorId(id: number) {
-    const nineBox = await repositorio.buscarPorId(id);
-    if (!nineBox) throw new Error('NINE_BOX_NAO_ENCONTRADO');
-    return nineBox;
-  }
+    async findById(id: number) {
+        return NineBoxRepository.findById(id);
+    }
 
-  async buscarPorColaboradorId(colaboradorId: number) {
-    return repositorio.buscarPorColaboradorId(colaboradorId);
-  }
+    async update(id: number, patch: Partial<NineBox>) {
+        return NineBoxRepository.update(id, patch);
+    }
 
-  async buscarPorCicloId(cicloId: number) {
-    return repositorio.buscarPorCicloId(cicloId);
-  }
-
-  async buscarPorQuadrante(quadrante: string) {
-    return repositorio.buscarPorQuadrante(quadrante);
-  }
-
-  async criar(dados: NineBox) {
-    return repositorio.criar(dados);
-  }
-
-  async atualizar(id: number, dados: Partial<NineBox>) {
-    const nineBox = await repositorio.buscarPorId(id);
-    if (!nineBox) throw new Error('NINE_BOX_NAO_ENCONTRADO');
-    
-    const atualizado = await repositorio.atualizar(id, dados);
-    if (!atualizado) throw new Error('NINE_BOX_NAO_ENCONTRADO');
-    return atualizado;
-  }
-
-  async remover(id: number) {
-    return repositorio.remover(id);
-  }
+    async delete(id: number) {
+        return NineBoxRepository.delete(id);
+    }
 }
+
+export default new NineBoxService();

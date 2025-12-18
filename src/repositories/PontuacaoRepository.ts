@@ -1,60 +1,55 @@
+import db from '../config/db';
 import { Pontuacao } from '../types/Pontuacao';
 
-export class PontuacaoRepository {
-  private pontuacoes: Pontuacao[] = [];
-  private nextId = 1;
-
-  listar(): Pontuacao[] {
-    return this.pontuacoes;
-  }
-
-  buscarPorId(id: number): Pontuacao | undefined {
-    return this.pontuacoes.find(p => p.id === id);
-  }
-
-  buscarPorColaboradorId(colaboradorId: number): Pontuacao[] {
-    return this.pontuacoes.filter(p => p.colaboradorId === colaboradorId);
-  }
-
-  buscarPorCicloId(cicloId: number): Pontuacao[] {
-    return this.pontuacoes.filter(p => p.cicloId === cicloId);
-  }
-
-  calcularTotalPorColaborador(colaboradorId: number): number {
-    return this.pontuacoes
-      .filter(p => p.colaboradorId === colaboradorId && p.status === 'aprovado')
-      .reduce((total, p) => total + p.valor, 0);
-  }
-
-  criar(pontuacao: Pontuacao): Pontuacao {
-    const novaPontuacao = {
-      ...pontuacao,
-      id: this.nextId++,
-      dataCriacao: new Date()
-    };
-    this.pontuacoes.push(novaPontuacao);
-    return novaPontuacao;
-  }
-
-  atualizar(id: number, pontuacao: Partial<Pontuacao>): Pontuacao | undefined {
-    const index = this.pontuacoes.findIndex(p => p.id === id);
-    if (index !== -1) {
-      this.pontuacoes[index] = {
-        ...this.pontuacoes[index],
-        ...pontuacao,
-        dataAtualizacao: new Date()
-      };
-      return this.pontuacoes[index];
+class PontuacaoRepository {
+    async create(pontuacao: Pontuacao): Promise<Pontuacao> {
+        const query = `
+            INSERT INTO pontuacao (avaliacao_id, competencia_id, meta_id, nota, comentario, peso_aplicado)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING *`;
+        const values = [
+            pontuacao.avaliacao_id,
+            pontuacao.competencia_id || null,
+            pontuacao.meta_id || null,
+            pontuacao.nota,
+            pontuacao.comentario || null,
+            pontuacao.peso_aplicado || 1
+        ];
+        const { rows } = await db.query(query, values);
+        return rows[0];
     }
-    return undefined;
-  }
 
-  remover(id: number): boolean {
-    const index = this.pontuacoes.findIndex(p => p.id === id);
-    if (index !== -1) {
-      this.pontuacoes.splice(index, 1);
-      return true;
+    async findAll(): Promise<Pontuacao[]> {
+        const { rows } = await db.query('SELECT * FROM pontuacao');
+        return rows;
     }
-    return false;
-  }
+
+    async findById(id: number): Promise<Pontuacao | null> {
+        const { rows } = await db.query('SELECT * FROM pontuacao WHERE id = $1', [id]);
+        return rows[0] || null;
+    }
+
+    async update(id: number, patch: Partial<Pontuacao>): Promise<Pontuacao> {
+        const fields: string[] = [];
+        const values: any[] = [];
+        let i = 1;
+
+        for (const key in patch) {
+            fields.push(`${key} = $${i}`);
+            // @ts-ignore
+            values.push(patch[key]);
+            i++;
+        }
+
+        values.push(id);
+        const query = `UPDATE pontuacao SET ${fields.join(', ')}, updated_at = now() WHERE id = $${i} RETURNING *`;
+        const { rows } = await db.query(query, values);
+        return rows[0];
+    }
+
+    async delete(id: number): Promise<void> {
+        await db.query('DELETE FROM pontuacao WHERE id = $1', [id]);
+    }
 }
+
+export default new PontuacaoRepository();

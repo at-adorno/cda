@@ -1,30 +1,26 @@
+import PlanoCarreiraRepository from '../repositories/PlanoCarreiraRepository';
 import { PlanoCarreira } from '../types/PlanoCarreira';
-import { PlanoCarreiraRepository } from '../repositories/PlanoCarreiraRepository';
 
-const repositorio = new PlanoCarreiraRepository();
+export default class PlanoCarreiraService {
+  private repo = new PlanoCarreiraRepository();
 
-export class PlanoCarreiraService {
-  async listarTodos() {
-    return repositorio.listar();
+  async list(): Promise<PlanoCarreira[]> {
+    return this.repo.findAll();
   }
 
-  async buscarPorId(id: number) {
-    const planoCarreira = await repositorio.buscarPorId(id);
-    if (!planoCarreira) throw new Error('PLANO_CARREIRA_NAO_ENCONTRADO');
-    return planoCarreira;
+  async getById(id: number): Promise<PlanoCarreira | null> {
+    return this.repo.findById(id);
   }
 
-  async criar(dados: PlanoCarreira) {
-    return repositorio.criar(dados);
+  async create(data: Partial<PlanoCarreira>): Promise<PlanoCarreira> {
+    return this.repo.create(data);
   }
 
-  async atualizar(id: number, dados: Partial<PlanoCarreira>) {
-    const atualizado = await repositorio.atualizar(id, dados);
-    if (!atualizado) throw new Error('PLANO_CARREIRA_NAO_ENCONTRADO');
-    return atualizado;
+  async update(id: number, data: Partial<PlanoCarreira>): Promise<PlanoCarreira | null> {
+    return this.repo.update(id, data);
   }
 
-  async remover(id: number) {
-    return repositorio.remover(id);
+  async delete(id: number): Promise<void> {
+    return this.repo.delete(id);
   }
 }

@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import { CargoController } from '../controllers/CargoController';
+import CargoController from '../controllers/CargoController';
 
-const roteador = Router();
-const cargo = new CargoController();
+const router = Router();
 
-roteador.get('/', cargo.listarTodos.bind(cargo));
-roteador.get('/:id', cargo.buscarPorId.bind(cargo));
-roteador.post('/', cargo.criar.bind(cargo));
-roteador.put('/:id', cargo.atualizar.bind(cargo));
-roteador.delete('/:id', cargo.remover.bind(cargo));
+router.get('/', CargoController.list);
+router.get('/:id', CargoController.get);
+router.post('/', CargoController.create);
+router.put('/:id', CargoController.update);
+router.delete('/:id', CargoController.delete);
 
-export default roteador;
+export default router;

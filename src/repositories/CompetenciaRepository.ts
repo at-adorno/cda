@@ -1,26 +1,38 @@
+import db from '../config/db';
 import { Competencia } from '../types/Competencia';
-class CompetenciaRepository {
-  private competencias: Competencia[] = [];
-  private proximoId = 1;
-  listar(): Competencia[] { return this.competencias; }
-  buscarPorId(id: number): Competencia | undefined { return this.competencias.find(c => c.id === id); }
-  criar(competencia: Omit<Competencia, 'id' | 'criadoEm' | 'atualizadoEm'>): Competencia {
-    const novaC: Competencia = { ...competencia, id: this.proximoId++, criadoEm: new Date(), atualizadoEm: new Date() };
-    this.competencias.push(novaC);
-    return novaC;
+
+export default class CompetenciaRepository {
+  async findAll(): Promise<Competencia[]> {
+    const { rows } = await db.query('SELECT * FROM competencia');
+    return rows;
   }
-  atualizar(id: number, competencia: Partial<Omit<Competencia, 'id' | 'criadoEm'>>): Competencia | undefined {
-    const index = this.competencias.findIndex(c => c.id === id);
-    if (index === -1) return undefined;
-    const cAtualizada: Competencia = { ...this.competencias[index], ...competencia, id, atualizadoEm: new Date() };
-    this.competencias[index] = cAtualizada;
-    return cAtualizada;
+
+  async findById(id: number): Promise<Competencia | null> {
+    const { rows } = await db.query('SELECT * FROM competencia WHERE id=$1', [id]);
+    return rows[0] || null;
   }
-  remover(id: number): boolean {
-    const index = this.competencias.findIndex(c => c.id === id);
-    if (index === -1) return false;
-    this.competencias.splice(index, 1);
-    return true;
+
+  async create(data: Partial<Competencia>): Promise<Competencia> {
+    const { nome, descricao, peso } = data;
+    const { rows } = await db.query(
+      `INSERT INTO competencia (nome, descricao, peso)
+       VALUES ($1, $2, $3) RETURNING *`,
+      [nome, descricao || null, peso ?? 1]
+    );
+    return rows[0];
+  }
+
+  async update(id: number, data: Partial<Competencia>): Promise<Competencia | null> {
+    const { nome, descricao, peso } = data;
+    const { rows } = await db.query(
+      `UPDATE competencia SET nome=$1, descricao=$2, peso=$3, updated_at=now()
+       WHERE id=$4 RETURNING *`,
+      [nome, descricao || null, peso ?? 1, id]
+    );
+    return rows[0] || null;
+  }
+
+  async delete(id: number): Promise<void> {
+    await db.query('DELETE FROM competencia WHERE id=$1', [id]);
   }
 }
-export default new CompetenciaRepository();

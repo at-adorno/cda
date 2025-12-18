@@ -1,53 +1,38 @@
 import { Request, Response } from 'express';
 import MetaService from '../services/MetaService';
 
-class MetaController {
-  private metaService = new MetaService();
+const service = new MetaService();
 
-  listarTodos = (req: Request, res: Response) => {
-    const metas = this.metaService.listarTodos();
+export default class MetaController {
+  static async list(req: Request, res: Response) {
+    const metas = await service.list();
     res.json(metas);
-  };
+  }
 
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const meta = this.metaService.buscarPorId(Number(id));
-    if (!meta) {
-      return res.status(404).json({ erro: 'Meta não encontrada' });
-    }
+  static async get(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const meta = await service.getById(id);
+    if (!meta) return res.status(404).json({ message: 'Meta não encontrada' });
     res.json(meta);
-  };
+  }
 
-  criar = (req: Request, res: Response) => {
-    const { titulo, descricao } = req.body;
-    const novaMeta = this.metaService.criar({
-      titulo,
-      descricao,
-    });
-    res.status(201).json(novaMeta);
-  };
+  static async create(req: Request, res: Response) {
+    const data = req.body;
+    const meta = await service.create(data);
+    res.status(201).json(meta);
+  }
 
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { titulo, descricao } = req.body;
-    const atualizado = this.metaService.atualizar(Number(id), {
-      titulo,
-      descricao,
-    });
-    if (!atualizado) {
-      return res.status(404).json({ erro: 'Meta não encontrada' });
-    }
-    res.json(atualizado);
-  };
+  static async update(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const data = req.body;
+    const meta = await service.update(id, data);
+    if (!meta) return res.status(404).json({ message: 'Meta não encontrada' });
+    res.json(meta);
+  }
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const removido = this.metaService.remover(Number(id));
-    if (!removido) {
-      return res.status(404).json({ erro: 'Meta não encontrada' });
-    }
+  static async delete(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    await service.delete(id);
     res.status(204).send();
-  };
+  }
 }
-
-export default new MetaController();

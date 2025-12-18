@@ -1,35 +1,26 @@
-import gestorRepository from '../repositories/GestorRepository';
-import { Gestor, ColaboradorAvaliacao, FiltroColaboradores } from '../types/Gestor';
+import GestorRepository from '../repositories/GestorRepository';
+import { Gestor } from '../types/Gestor';
 
 class GestorService {
-  // Obter detalhes completos de um gestor
-  async obterGestorCompleto(id: number): Promise<Gestor> {
-    const gestor = await gestorRepository.obterGestorPorId(id);
-    if (!gestor) throw new Error('GESTOR_NAO_ENCONTRADO');
-    return gestor;
-  }
+    async create(gestor: Gestor) {
+        return GestorRepository.create(gestor);
+    }
 
-  // Listar gestores com filtros
-  async listarGestores(): Promise<Gestor[]> {
-    return gestorRepository.listarGestores();
-  }
+    async findAll() {
+        return GestorRepository.findAll();
+    }
 
-  // Criar novo gestor
-  async criarGestor(dados: Gestor): Promise<Gestor> {
-    if (!dados.usuarioId) throw new Error('USUARIO_ID_OBRIGATORIO');
-    if (!dados.departamento) throw new Error('DEPARTAMENTO_OBRIGATORIO');
+    async findById(id: number) {
+        return GestorRepository.findById(id);
+    }
 
-    return gestorRepository.criarGestor(dados);
-  }
+    async update(id: number, patch: Partial<Gestor>) {
+        return GestorRepository.update(id, patch);
+    }
 
-  // Atualizar gestor
-  async atualizarGestor(id: number, dados: Partial<Gestor>): Promise<Gestor> {
-    const gestorAtualizado = await gestorRepository.atualizarGestor(id, dados);
-    if (!gestorAtualizado) throw new Error('GESTOR_NAO_ENCONTRADO');
-    return gestorAtualizado;
-  }
+    async delete(id: number) {
+        return GestorRepository.delete(id);
+    }
+}
 
-  // Deletar gestor
-  async deletarGestor(id: number): Promise<void> {
-    const sucesso = await gestorRepository.deletarGestor(id);
-    if (!sucesso) throw new Error('GESTOR_NAO_ENCONTRADO');
+export default new GestorService();

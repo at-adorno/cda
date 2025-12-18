@@ -1,9 +1,3 @@
-/*
-Este arquivo configura e exporta o Pool (Singleton), lendo as credenciais de forma segura.
-TypeScript
-src/config/db.ts
-*/
-
 import * as dotenv from 'dotenv';
 import { Pool } from 'pg';
 
@@ -22,8 +16,9 @@ pool.on('connect', () => {
     console.log('Pool de Conexões PostgreSQL criado.');
 });
 
-pool.on('error', (err) => {
+pool.on('error', (err: Error) => {
     console.error('Erro inesperado no pool de conexões:', err);
 });
+
 
 export default pool;

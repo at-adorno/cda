@@ -1,53 +1,38 @@
 import { Request, Response } from 'express';
 import PlanoCarreiraService from '../services/PlanoCarreiraService';
 
-class PlanoCarreiraController {
-  private planoCarreiraService = new PlanoCarreiraService();
+const service = new PlanoCarreiraService();
 
-  listarTodos = (req: Request, res: Response) => {
-    const planosCarreira = this.planoCarreiraService.listarTodos();
-    res.json(planosCarreira);
-  };
+export default class PlanoCarreiraController {
+  static async list(req: Request, res: Response) {
+    const planos = await service.list();
+    res.json(planos);
+  }
 
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const planoCarreira = this.planoCarreiraService.buscarPorId(Number(id));
-    if (!planoCarreira) {
-      return res.status(404).json({ erro: 'Plano de Carreira não encontrado' });
-    }
-    res.json(planoCarreira);
-  };
+  static async get(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const plano = await service.getById(id);
+    if (!plano) return res.status(404).json({ message: 'Plano de Carreira não encontrado' });
+    res.json(plano);
+  }
 
-  criar = (req: Request, res: Response) => {
-    const { titulo, descricao } = req.body;
-    const novoPlanoCarreira = this.planoCarreiraService.criar({
-      titulo,
-      descricao,
-    });
-    res.status(201).json(novoPlanoCarreira);
-  };
+  static async create(req: Request, res: Response) {
+    const data = req.body;
+    const plano = await service.create(data);
+    res.status(201).json(plano);
+  }
 
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { titulo, descricao } = req.body;
-    const atualizado = this.planoCarreiraService.atualizar(Number(id), {
-      titulo,
-      descricao,
-    });
-    if (!atualizado) {
-      return res.status(404).json({ erro: 'Plano de Carreira não encontrado' });
-    }
-    res.json(atualizado);
-  };
+  static async update(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const data = req.body;
+    const plano = await service.update(id, data);
+    if (!plano) return res.status(404).json({ message: 'Plano de Carreira não encontrado' });
+    res.json(plano);
+  }
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const removido = this.planoCarreiraService.remover(Number(id));
-    if (!removido) {
-      return res.status(404).json({ erro: 'Plano de Carreira não encontrado' });
-    }
+  static async delete(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    await service.delete(id);
     res.status(204).send();
-  };
+  }
 }
-
-export default new PlanoCarreiraController();

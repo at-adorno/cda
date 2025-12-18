@@ -1,10 +1,10 @@
 export interface CicloDesempenho {
   id?: number;
   nome: string;
-  dataInicio: Date;
-  dataFim: Date;
+  data_inicio: string; // ISO string ou 'YYYY-MM-DD'
+  data_fim: string;    // ISO string ou 'YYYY-MM-DD'
   descricao?: string;
-  criadoPor?: number; // FK para usuario_id
-  criadoEm?: Date;
-  atualizadoEm?: Date;
+  criado_por?: number;
+  created_at?: string;
+  updated_at?: string;
 }

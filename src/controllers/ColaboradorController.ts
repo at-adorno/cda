@@ -1,87 +1,56 @@
 import { Request, Response } from 'express';
-import ColaboradorService from '../services/ColaboradorService';
+import { colaboradorService } from '../services/ColaboradorService';
 
-class ColaboradorController {
-  private colaboradorService = new ColaboradorService();
-
-  listarTodos = (req: Request, res: Response) => {
-    const colaboradores = this.colaboradorService.listarTodos();
-    res.json(colaboradores);
-  };
-
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const colaborador = this.colaboradorService.buscarPorId(Number(id));
-    if (!colaborador) {
-      return res.status(404).json({ erro: 'Colaborador não encontrado' });
+export const ColaboradorController = {
+  async listarTodos(req: Request, res: Response) {
+    try {
+      const colaboradores = await colaboradorService.listarTodos();
+      return res.json(colaboradores);
+    } catch (error: any) {
+      return res.status(500).json({ erro: error.message || 'Erro ao listar colaboradores' });
     }
-    res.json(colaborador);
-  };
+  },
 
-  criar = (req: Request, res: Response) => {
-    const { nome, email, departamento } = req.body;
-    const novoColaborador = this.colaboradorService.criar({
-      nome,
-      email,
-      departamento,
-    });
-    res.status(201).json(novoColaborador);
-  };
-
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { nome, email, departamento } = req.body;
-    const colaboradorAtualizado = this.colaboradorService.atualizar(
-      Number(id),
-      { nome, email, departamento }
-    );
-    if (!colaboradorAtualizado) {
-      return res.status(404).json({ erro: 'Colaborador não encontrado' });
+  async obterPorId(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const colaborador = await colaboradorService.obterPorId(id);
+      return res.json(colaborador);
+    } catch (error: any) {
+      if (error.message === 'COLABORADOR_NAO_ENCONTRADO') return res.status(404).json({ erro: error.message });
+      return res.status(500).json({ erro: 'Erro ao obter colaborador' });
     }
-    res.json(colaboradorAtualizado);
-  };
+  },
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const sucesso = this.colaboradorService.remover(Number(id));
-    if (!sucesso) {
-      return res.status(404).json({ erro: 'Colaborador não encontrado' });
+  async criar(req: Request, res: Response) {
+    try {
+      const dados = req.body;
+      const criado = await colaboradorService.criar(dados);
+      return res.status(201).json(criado);
+    } catch (error: any) {
+      return res.status(400).json({ erro: error.message || 'Erro ao criar colaborador' });
     }
-    res.json({ mensagem: 'Colaborador removido com sucesso' });
-  };
+  },
 
-  obterAvaliacaoCompleta = (req: Request, res: Response) => {
-  try {
-    const { id, cicloId } = req.params;
-    if (!cicloId) {
-      return res.status(400).json({ success: false, erro: 'cicloId é obrigatório' });
+  async atualizar(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const dados = req.body;
+      const atualizado = await colaboradorService.atualizar(id, dados);
+      return res.json(atualizado);
+    } catch (error: any) {
+      if (error.message === 'COLABORADOR_NAO_ENCONTRADO') return res.status(404).json({ erro: error.message });
+      return res.status(500).json({ erro: 'Erro ao atualizar colaborador' });
     }
-    const avaliacao = this.colaboradorService.obterAvaliacaoCompleta(
-      Number(id),
-      Number(cicloId),
-    );
-    res.status(200).json({ success: true, avaliacao });
-  } catch (erro) {
-    res.status(404).json({ success: false, erro: (erro as Error).message });
-  }
+  },
+
+  async remover(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      await colaboradorService.remover(id);
+      return res.status(204).send();
+    } catch (error: any) {
+      return res.status(500).json({ erro: 'Erro ao remover colaborador' });
+    }
+  },
 };
-
-obterCompetenciasDetalhes = (req: Request, res: Response) => {
-  try {
-    const { id, cicloId } = req.params;
-    if (!cicloId) {
-      return res.status(400).json({ success: false, erro: 'cicloId é obrigatório' });
-    }
-    const competencias = this.colaboradorService.obterCompetenciasDetalhes(
-      Number(id),
-      Number(cicloId),
-    );
-    res.status(200).json({ success: true, competencias });
-  } catch (erro) {
-    res.status(404).json({ success: false, erro: (erro as Error).message });
-  }
-};
-
-}
-
-export default new ColaboradorController();

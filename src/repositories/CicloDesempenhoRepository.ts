@@ -1,45 +1,52 @@
-import { pool } from '../config/db';
-import { CicloDesempenho } from '.././types/CicloDesempenho/Ciclo';
+import db from '../config/db';
+import { CicloDesempenho } from '../types/CicloDesempenho';
 
-export class CicloRepository {
-  async listarTodos(): Promise<Ciclo[]> {
-    const resultado = await pool.query('SELECT * FROM ciclos ORDER BY data_inicio DESC');
-    return resultado.rows.map(row => this.mapearDoBD(row));
-  }
+export const cicloDesempenhoRepository = {
+  async findAll(): Promise<CicloDesempenho[]> {
+    const result = await db.query('SELECT * FROM ciclo_desempenho ORDER BY id');
+    return result.rows;
+  },
 
-  async buscarPorId(id: number): Promise<Ciclo | null> {
-    const resultado = await pool.query('SELECT * FROM ciclos WHERE id = $1', [id]);
-    if (!resultado.rows[0]) return null;
-    return this.mapearDoBD(resultado.rows[0]);
-  }
+  async findById(id: number): Promise<CicloDesempenho | null> {
+    const result = await db.query('SELECT * FROM ciclo_desempenho WHERE id = $1', [id]);
+    return result.rows[0] || null;
+  },
 
-  async criar(dados: Ciclo): Promise<Ciclo> {
-    const query = `INSERT INTO ciclos (nome, data_inicio, data_fim, status, descricao, criado_em, atualizado_em) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *;`;
-    const valores = [dados.nome, dados.dataInicio, dados.dataFim, dados.status ?? 'planejamento', dados.descricao || null];
-    const resultado = await pool.query(query, valores);
-    return this.mapearDoBD(resultado.rows[0]);
-  }
+  async findByNome(nome: string): Promise<CicloDesempenho | null> {
+    const result = await db.query('SELECT * FROM ciclo_desempenho WHERE nome = $1', [nome]);
+    return result.rows[0] || null;
+  },
 
-  async atualizar(id: number, dados: Partial<Ciclo>): Promise<Ciclo | null> {
-    const resultado = await pool.query(`UPDATE ciclos SET nome = COALESCE($1, nome), data_inicio = COALESCE($2, data_inicio), data_fim = COALESCE($3, data_fim), status = COALESCE($4, status), descricao = COALESCE($5, descricao), atualizado_em = NOW() WHERE id = $6 RETURNING *;`, [dados.nome ?? null, dados.dataInicio ?? null, dados.dataFim ?? null, dados.status ?? null, dados.descricao ?? null, id]);
-    if (!resultado.rows[0]) return null;
-    return this.mapearDoBD(resultado.rows[0]);
-  }
+  async create(dados: CicloDesempenho): Promise<CicloDesempenho> {
+    const result = await db.query(
+      `INSERT INTO ciclo_desempenho (nome, data_inicio, data_fim, descricao, criado_por)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [dados.nome, dados.data_inicio, dados.data_fim, dados.descricao, dados.criado_por]
+    );
+    return result.rows[0];
+  },
 
-  async remover(id: number): Promise<void> {
-    await pool.query('DELETE FROM ciclos WHERE id = $1', [id]);
-  }
+  async update(id: number, patch: Partial<CicloDesempenho>): Promise<CicloDesempenho | null> {
+    const fields = [];
+    const values: any[] = [];
+    let i = 1;
 
-  private mapearDoBD(linha: any): Ciclo {
-    return {
-      id: linha.id,
-      nome: linha.nome,
-      dataInicio: linha.data_inicio,
-      dataFim: linha.data_fim,
-      status: linha.status,
-      descricao: linha.descricao,
-      criadoEm: linha.criado_em,
-      atualizadoEm: linha.atualizado_em,
-    };
-  }
-}
+    for (const key in patch) {
+      fields.push(`${key} = $${i}`);
+      values.push((patch as any)[key]);
+      i++;
+    }
+    if (fields.length === 0) return await this.findById(id);
+
+    values.push(id);
+    const result = await db.query(
+      `UPDATE ciclo_desempenho SET ${fields.join(', ')}, updated_at = now() WHERE id = $${i} RETURNING *`,
+      values
+    );
+    return result.rows[0] || null;
+  },
+
+  async delete(id: number): Promise<void> {
+    await db.query('DELETE FROM ciclo_desempenho WHERE id = $1', [id]);
+  },
+};

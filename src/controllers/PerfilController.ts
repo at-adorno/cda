@@ -1,56 +1,87 @@
 import { Request, Response } from 'express';
-import PerfilService from '../services/PerfilService';
+import { PerfilService } from '../services/PerfilService'; // ajuste conforme nome do arquivo
 
 class PerfilController {
   private perfilService = new PerfilService();
 
-  listarTodos = (req: Request, res: Response) => {
-    const perfis = this.perfilService.listarTodos();
-    res.json(perfis);
-  };
-
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const perfil = this.perfilService.buscarPorId(Number(id));
-    if (!perfil) {
-      return res.status(404).json({ erro: 'Perfil não encontrado' });
+  listarTodos = async (req: Request, res: Response) => {
+    try {
+      const perfis = await this.perfilService.listarTodos();
+      res.json(perfis);
+    } catch (erro: unknown) {
+      if (erro instanceof Error) {
+        res.status(500).json({ erro: erro.message });
+      } else {
+        res.status(500).json({ erro: String(erro) });
+      }
     }
-    res.json(perfil);
   };
 
-  criar = (req: Request, res: Response) => {
-    const { nome, descricao, permissoes, ativo } = req.body;
-    const novoPerfil = this.perfilService.criar({
-      nome,
-      descricao,
-      permissoes,
-      ativo
-    });
-    res.status(201).json(novoPerfil);
-  };
-
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { nome, descricao, permissoes, ativo } = req.body;
-    const atualizado = this.perfilService.atualizar(Number(id), {
-      nome,
-      descricao,
-      permissoes,
-      ativo
-    });
-    if (!atualizado) {
-      return res.status(404).json({ erro: 'Perfil não encontrado' });
+  buscarPorId = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const perfil = await this.perfilService.buscarPorId(Number(id));
+      res.json(perfil);
+    } catch (erro: unknown) {
+      if (erro instanceof Error) {
+        res.status(404).json({ erro: erro.message });
+      } else {
+        res.status(404).json({ erro: String(erro) });
+      }
     }
-    res.json(atualizado);
   };
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const removido = this.perfilService.remover(Number(id));
-    if (!removido) {
-      return res.status(404).json({ erro: 'Perfil não encontrado' });
+  criar = async (req: Request, res: Response) => {
+    try {
+      const { nome, descricao, permissoes, ativo } = req.body;
+      const novoPerfil = await this.perfilService.criar({
+        nome,
+        descricao,
+        permissoes,
+        ativo
+      });
+      res.status(201).json(novoPerfil);
+    } catch (erro: unknown) {
+      if (erro instanceof Error) {
+        res.status(500).json({ erro: erro.message });
+      } else {
+        res.status(500).json({ erro: String(erro) });
+      }
     }
-    res.status(204).send();
+  };
+
+  atualizar = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { nome, descricao, permissoes, ativo } = req.body;
+      const atualizado = await this.perfilService.atualizar(Number(id), {
+        nome,
+        descricao,
+        permissoes,
+        ativo
+      });
+      res.json(atualizado);
+    } catch (erro: unknown) {
+      if (erro instanceof Error) {
+        res.status(404).json({ erro: erro.message });
+      } else {
+        res.status(404).json({ erro: String(erro) });
+      }
+    }
+  };
+
+  remover = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      await this.perfilService.remover(Number(id));
+      res.status(204).send();
+    } catch (erro: unknown) {
+      if (erro instanceof Error) {
+        res.status(404).json({ erro: erro.message });
+      } else {
+        res.status(404).json({ erro: String(erro) });
+      }
+    }
   };
 }
 

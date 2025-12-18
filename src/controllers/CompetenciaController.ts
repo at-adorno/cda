@@ -1,53 +1,38 @@
 import { Request, Response } from 'express';
 import CompetenciaService from '../services/CompetenciaService';
 
-class CompetenciaController {
-  private competenciaService = new CompetenciaService();
+const service = new CompetenciaService();
 
-  listarTodos = (req: Request, res: Response) => {
-    const competencias = this.competenciaService.listarTodos();
+export default class CompetenciaController {
+  static async list(req: Request, res: Response) {
+    const competencias = await service.list();
     res.json(competencias);
-  };
+  }
 
-  buscarPorId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const competencia = this.competenciaService.buscarPorId(Number(id));
-    if (!competencia) {
-      return res.status(404).json({ erro: 'Competência não encontrada' });
-    }
+  static async get(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const competencia = await service.getById(id);
+    if (!competencia) return res.status(404).json({ message: 'Competência não encontrada' });
     res.json(competencia);
-  };
+  }
 
-  criar = (req: Request, res: Response) => {
-    const { nome, descricao } = req.body;
-    const novaCompetencia = this.competenciaService.criar({
-      nome,
-      descricao,
-    });
-    res.status(201).json(novaCompetencia);
-  };
+  static async create(req: Request, res: Response) {
+    const data = req.body;
+    const competencia = await service.create(data);
+    res.status(201).json(competencia);
+  }
 
-  atualizar = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { nome, descricao } = req.body;
-    const atualizado = this.competenciaService.atualizar(Number(id), {
-      nome,
-      descricao,
-    });
-    if (!atualizado) {
-      return res.status(404).json({ erro: 'Competência não encontrada' });
-    }
-    res.json(atualizado);
-  };
+  static async update(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    const data = req.body;
+    const competencia = await service.update(id, data);
+    if (!competencia) return res.status(404).json({ message: 'Competência não encontrada' });
+    res.json(competencia);
+  }
 
-  remover = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const removido = this.competenciaService.remover(Number(id));
-    if (!removido) {
-      return res.status(404).json({ erro: 'Competência não encontrada' });
-    }
+  static async delete(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    await service.delete(id);
     res.status(204).send();
-  };
+  }
 }
-
-export default new CompetenciaController();

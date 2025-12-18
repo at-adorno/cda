@@ -4,6 +4,6 @@ export interface Meta {
   descricao?: string;
   peso: number;
   prazo?: Date;
-  criadoEm: Date;
-  atualizadoEm: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }

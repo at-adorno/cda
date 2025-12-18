@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import { CompetenciaController } from '../controllers/CompetenciaController';
+import CompetenciaController from '../controllers/CompetenciaController';
 
-const roteador = Router();
-const competencia = new CompetenciaController();
+const router = Router();
 
-roteador.get('/', competencia.listarTodos.bind(competencia));
-roteador.get('/:id', competencia.buscarPorId.bind(competencia));
-roteador.post('/', competencia.criar.bind(competencia));
-roteador.put('/:id', competencia.atualizar.bind(competencia));
-roteador.delete('/:id', competencia.remover.bind(competencia));
+router.get('/', CompetenciaController.list);
+router.get('/:id', CompetenciaController.get);
+router.post('/', CompetenciaController.create);
+router.put('/:id', CompetenciaController.update);
+router.delete('/:id', CompetenciaController.delete);
 
-export default roteador;
+export default router;

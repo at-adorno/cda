@@ -1,9 +1,11 @@
 export interface Colaborador {
   id?: number;
-  matricula: string;
+  usuario_id?: number | null;
   nome: string;
-  lotacao: string;
-  cargo: string;
-  email: string;
-  ativo: boolean;
+  cargo_id?: number | null;
+  gestor_id?: number | null;
+  matricula: string;
+  ativo?: boolean;
+  created_at?: Date;
+  updated_at?: Date;
 }

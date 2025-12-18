@@ -1,37 +1,38 @@
+import { usuarioRepository } from '../repositories/UsuarioRepository';
 import { Usuario } from '../types/Usuario';
-import { UsuarioRepository } from '../repositories/UsuarioRepository';
-
-const repositorio = new UsuarioRepository();
 
 export const usuarioService = {
-  async listarTodos() {
-    return repositorio.listarTodos();
-feat: adicionar UsuarioService com padrão em português
-  async obterPorId(id: number) {
-    const usuario = await repositorio.buscarPorId(id);
+  async listarTodos(): Promise<Usuario[]> {
+    return usuarioRepository.listarTodos();
+  },
+
+  async obterPorId(id: number): Promise<Usuario> {
+    const usuario = await usuarioRepository.buscarPorId(id);
     if (!usuario) throw new Error('USUARIO_NAO_ENCONTRADO');
     return usuario;
   },
 
-  async obterPorEmail(email: string) {
-    const usuario = await repositorio.buscarPorEmail(email);
+  async obterPorEmail(email: string): Promise<Usuario> {
+    const usuario = await usuarioRepository.buscarPorEmail(email);
     if (!usuario) throw new Error('USUARIO_NAO_ENCONTRADO');
     return usuario;
   },
 
-  async criar(dados: Usuario) {
-    const usuarioExistente = await repositorio.buscarPorEmail(dados.email);
+  async criar(dados: Usuario): Promise<Usuario> {
+    const usuarioExistente = await usuarioRepository.buscarPorEmail(dados.email);
     if (usuarioExistente) throw new Error('EMAIL_JA_REGISTRADO');
-    return repositorio.criar(dados);
+    return usuarioRepository.criar(dados);
   },
 
-  async atualizar(id: number, dados: Partial<Usuario>) {
-    const atualizado = await repositorio.atualizar(id, dados);
+  async atualizar(id: number, dados: Partial<Usuario>): Promise<Usuario> {
+    const atualizado = await usuarioRepository.atualizar(id, dados);
     if (!atualizado) throw new Error('USUARIO_NAO_ENCONTRADO');
     return atualizado;
   },
 
-  async remover(id: number) {
-    await repositorio.remover(id);
+  async remover(id: number): Promise<void> {
+    const usuario = await usuarioRepository.buscarPorId(id);
+    if (!usuario) throw new Error('USUARIO_NAO_ENCONTRADO');
+    await usuarioRepository.remover(id);
   },
 };

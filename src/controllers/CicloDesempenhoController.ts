@@ -1,65 +1,54 @@
-import { Request, Response } from 'express';
-import { CicloDesempenhoService } from '.././services/CicloDesempenhoService/CicloService';
+import type { Request, Response } from 'express';
+import { cicloDesempenhoService } from '../services/CicloDesempenhoService';
 
-const servico = new CicloService();
-
-export class CicloController {
-  async obterTodos(req: Request, res: Response) {
-    const ciclos = await servico.listarTodos();
-    return res.json(ciclos);
-  }
+export const cicloDesempenhoController = {
+  async listarTodos(req: Request, res: Response) {
+    try {
+      const ciclos = await cicloDesempenhoService.listarTodos();
+      return res.json(ciclos);
+    } catch (erro: any) {
+      return res.status(500).json({ erro: 'Erro ao listar ciclos de desempenho' });
+    }
+  },
 
   async obterPorId(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      const ciclo = await servico.buscarPorId(id);
+      const ciclo = await cicloDesempenhoService.obterPorId(id);
       return res.json(ciclo);
     } catch (erro: any) {
-      if (erro.message === 'CICLO_NAO_ENCONTRADO') return res.status(404).json({ mensagem: 'Ciclo não encontrado' });
-      return res.status(500).json({ mensagem: 'Erro ao buscar ciclo' });
+      return res.status(404).json({ erro: erro.message });
     }
-  }
+  },
 
   async criar(req: Request, res: Response) {
     try {
-      const ciclo = await servico.criar(req.body);
-      return res.status(201).json(ciclo);
+      const dados = req.body;
+      const criado = await cicloDesempenhoService.criar(dados);
+      return res.status(201).json(criado);
     } catch (erro: any) {
-      if (erro.message === 'DATA_FIM_INVALIDA') return res.status(400).json({ mensagem: 'Data fim deve ser após a data início' });
-      return res.status(400).json({ mensagem: 'Erro ao criar ciclo', detalhes: erro.message });
+      return res.status(400).json({ erro: erro.message });
     }
-  }
+  },
 
   async atualizar(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      const ciclo = await servico.atualizar(id, req.body);
-      return res.json(ciclo);
+      const patch = req.body;
+      const atualizado = await cicloDesempenhoService.atualizar(id, patch);
+      return res.json(atualizado);
     } catch (erro: any) {
-      if (erro.message === 'CICLO_NAO_ENCONTRADO') return res.status(404).json({ mensagem: 'Ciclo não encontrado' });
-      if (erro.message === 'DATA_FIM_INVALIDA') return res.status(400).json({ mensagem: 'Data fim deve ser após a data início' });
-      return res.status(500).json({ mensagem: 'Erro ao atualizar ciclo' });
+      return res.status(404).json({ erro: erro.message });
     }
-  }
+  },
 
   async remover(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      await servico.remover(id);
+      await cicloDesempenhoService.remover(id);
       return res.status(204).send();
     } catch (erro: any) {
-      return res.status(500).json({ mensagem: 'Erro ao remover ciclo' });
+      return res.status(500).json({ erro: erro.message });
     }
-  }
-
-  async encerrar(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-      const ciclo = await servico.encerrar(id);
-      return res.json(ciclo);
-    } catch (erro: any) {
-      if (erro.message === 'CICLO_NAO_ENCONTRADO') return res.status(404).json({ mensagem: 'Ciclo não encontrado' });
-      return res.status(500).json({ mensagem: 'Erro ao encerrar ciclo' });
-    }
-  }
-}
+  },
+};

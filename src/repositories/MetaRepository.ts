@@ -1,26 +1,38 @@
+import db from '../config/db';
 import { Meta } from '../types/Meta';
-class MetaRepository {
-  private metas: Meta[] = [];
-  private proximoId = 1;
-  listar(): Meta[] { return this.metas; }
-  buscarPorId(id: number): Meta | undefined { return this.metas.find(m => m.id === id); }
-  criar(meta: Omit<Meta, 'id' | 'criadoEm' | 'atualizadoEm'>): Meta {
-    const novaM: Meta = { ...meta, id: this.proximoId++, criadoEm: new Date(), atualizadoEm: new Date() };
-    this.metas.push(novaM);
-    return novaM;
+
+export default class MetaRepository {
+  async findAll(): Promise<Meta[]> {
+    const { rows } = await db.query('SELECT * FROM meta');
+    return rows;
   }
-  atualizar(id: number, meta: Partial<Omit<Meta, 'id' | 'criadoEm'>>): Meta | undefined {
-    const index = this.metas.findIndex(m => m.id === id);
-    if (index === -1) return undefined;
-    const mAtualizada: Meta = { ...this.metas[index], ...meta, id, atualizadoEm: new Date() };
-    this.metas[index] = mAtualizada;
-    return mAtualizada;
+
+  async findById(id: number): Promise<Meta | null> {
+    const { rows } = await db.query('SELECT * FROM meta WHERE id=$1', [id]);
+    return rows[0] || null;
   }
-  remover(id: number): boolean {
-    const index = this.metas.findIndex(m => m.id === id);
-    if (index === -1) return false;
-    this.metas.splice(index, 1);
-    return true;
+
+  async create(data: Partial<Meta>): Promise<Meta> {
+    const { titulo, descricao, peso, prazo } = data;
+    const { rows } = await db.query(
+      `INSERT INTO meta (titulo, descricao, peso, prazo)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [titulo, descricao || null, peso ?? 1, prazo || null]
+    );
+    return rows[0];
+  }
+
+  async update(id: number, data: Partial<Meta>): Promise<Meta | null> {
+    const { titulo, descricao, peso, prazo } = data;
+    const { rows } = await db.query(
+      `UPDATE meta SET titulo=$1, descricao=$2, peso=$3, prazo=$4, updated_at=now()
+       WHERE id=$5 RETURNING *`,
+      [titulo, descricao || null, peso ?? 1, prazo || null, id]
+    );
+    return rows[0] || null;
+  }
+
+  async delete(id: number): Promise<void> {
+    await db.query('DELETE FROM meta WHERE id=$1', [id]);
   }
 }
-export default new MetaRepository();

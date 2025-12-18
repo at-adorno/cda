@@ -1,30 +1,62 @@
-import { pool } from '../config/db';
+import db from '../config/db';
 import { Colaborador } from '../types/Colaborador';
 
-export class ColaboradorRepository {
-  async listarTodos(): Promise<Colaborador[]> {
-    const resultado = await pool.query('SELECT * FROM colaboradores ORDER BY nome');
-    return resultado.rows;
-  }
+const tableName = 'colaborador';
 
-  async buscarPorId(id: number): Promise<Colaborador | null> {
-    const resultado = await pool.query('SELECT * FROM colaboradores WHERE id = $1', [id]);
-    return resultado.rows[0] ?? null;
-  }
+export const colaboradorRepository = {
+  async findAll(): Promise<Colaborador[]> {
+    const { rows } = await db.query(`SELECT * FROM ${tableName}`);
+    return rows;
+  },
 
-  async criar(dados: Colaborador): Promise<Colaborador> {
-    const query = `INSERT INTO colaboradores (matricula, nome, lotacao, cargo, email, ativo) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
-    const valores = [dados.matricula, dados.nome, dados.lotacao, dados.cargo, dados.email, dados.ativo ?? true];
-    const resultado = await pool.query(query, valores);
-    return resultado.rows[0];
-  }
+  async findById(id: number): Promise<Colaborador | null> {
+    const { rows } = await db.query(`SELECT * FROM ${tableName} WHERE id = $1`, [id]);
+    return rows[0] || null;
+  },
 
-  async atualizar(id: number, dados: Partial<Colaborador>): Promise<Colaborador | null> {
-    const resultado = await pool.query(`UPDATE colaboradores SET matricula = COALESCE($1, matricula), nome = COALESCE($2, nome), lotacao = COALESCE($3, lotacao), cargo = COALESCE($4, cargo), email = COALESCE($5, email), ativo = COALESCE($6, ativo) WHERE id = $7 RETURNING *;`, [dados.matricula ?? null, dados.nome ?? null, dados.lotacao ?? null, dados.cargo ?? null, dados.email ?? null, dados.ativo ?? null, id]);
-    return resultado.rows[0] ?? null;
-  }
+  async findByUsuarioId(usuario_id: number): Promise<Colaborador | null> {
+    const { rows } = await db.query(`SELECT * FROM ${tableName} WHERE usuario_id = $1`, [usuario_id]);
+    return rows[0] || null;
+  },
 
-  async remover(id: number): Promise<void> {
-    await pool.query('DELETE FROM colaboradores WHERE id = $1', [id]);
-  }
-}
+  async create(colaborador: Colaborador): Promise<Colaborador> {
+    const query = `
+      INSERT INTO ${tableName} 
+        (usuario_id, nome, cargo_id, gestor_id, matricula, ativo)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *`;
+    const values = [
+      colaborador.usuario_id ?? null,
+      colaborador.nome,
+      colaborador.cargo_id ?? null,
+      colaborador.gestor_id ?? null,
+      colaborador.matricula,
+      colaborador.ativo ?? true,
+    ];
+    const { rows } = await db.query(query, values);
+    return rows[0];
+  },
+
+  async update(id: number, patch: Partial<Colaborador>): Promise<Colaborador | null> {
+    const fields = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    for (const key in patch) {
+      fields.push(`${key} = $${idx}`);
+      values.push((patch as any)[key]);
+      idx++;
+    }
+
+    if (fields.length === 0) return await this.findById(id);
+
+    values.push(id);
+    const query = `UPDATE ${tableName} SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`;
+    const { rows } = await db.query(query, values);
+    return rows[0] || null;
+  },
+
+  async delete(id: number): Promise<void> {
+    await db.query(`DELETE FROM ${tableName} WHERE id = $1`, [id]);
+  },
+};

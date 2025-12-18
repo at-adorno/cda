@@ -1,20 +1,12 @@
 import { Router } from 'express';
 import { ColaboradorController } from '../controllers/ColaboradorController';
 
-const roteador = Router();
-const controlador = new ColaboradorController();
+const router = Router();
 
-roteador.get('/', controlador.obterTodos.bind(controlador));
-roteador.get('/:id', controlador.obterPorId.bind(controlador));
-roteador.post('/', controlador.criar.bind(controlador));
-roteador.put('/:id', controlador.atualizar.bind(controlador));
-roteador.delete('/:id', controlador.remover.bind(controlador));
+router.get('/', ColaboradorController.listarTodos);
+router.get('/:id', ColaboradorController.obterPorId);
+router.post('/', ColaboradorController.criar);
+router.put('/:id', ColaboradorController.atualizar);
+router.delete('/:id', ColaboradorController.remover);
 
-// Rota para obter a avaliação completa de um colaborador em um ciclo específico
-roteador.get('/:id/avaliacoes/:cicloId/completa', controlador.obterAvaliacaoCompleta.bind(controlador));
-
-// Rota para obter detalhes das competências de um colaborador em um ciclo específico
-roteador.get('/:id/competencias/:cicloId/detalhes', controlador.obterCompetenciasDetalhes.bind(controlador));
-
-
-export default roteador;
+export default router;

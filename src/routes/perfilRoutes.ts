@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { PerfilController } from '../controllers/PerfilController';
+import perfilController from '../controllers/PerfilController'; // import da instância
 
 const roteador = Router();
-const perfil = new PerfilController();
 
-roteador.get('/', perfil.listarTodos.bind(perfil));
-roteador.get('/:id', perfil.buscarPorId.bind(perfil));
-roteador.post('/', perfil.criar.bind(perfil));
-roteador.put('/:id', perfil.atualizar.bind(perfil));
-roteador.delete('/:id', perfil.remover.bind(perfil));
+// Usando diretamente a instância do controller
+roteador.get('/', perfilController.listarTodos.bind(perfilController));
+roteador.get('/:id', perfilController.buscarPorId.bind(perfilController));
+roteador.post('/', perfilController.criar.bind(perfilController));
+roteador.put('/:id', perfilController.atualizar.bind(perfilController));
+roteador.delete('/:id', perfilController.remover.bind(perfilController));
 
 export default roteador;

@@ -1,15 +1,12 @@
 export interface Avaliacao {
-  id?: number;
-  colaboradorId: number;
-  cicloId: number;
-  avaliador: string;
-  notas: string;
-  desempenho: number;
-  comportamento: number;
-  pontualidade: number;
-  qualidade: number;
-  media: number;
-  status: 'pendente' | 'em_andamento' | 'concluida';
-  dataCriacao?: Date;
-  dataAtualizacao?: Date;
+    id?: number;
+    ciclo_colaborador_id: number;
+    avaliador_id: number;
+    tipo: string; // Ex: 'GESTOR', 'AUTOAVALIACAO'
+    status: string;
+    pontuacao_merito?: number;
+    data_envio?: Date;
+    comentario?: string;
+    created_at?: Date;
+    updated_at?: Date;
 }

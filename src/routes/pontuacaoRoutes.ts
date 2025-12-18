@@ -1,16 +1,12 @@
 import { Router } from 'express';
-import { PontuacaoController } from '../controllers/PontuacaoController';
+import PontuacaoController from '../controllers/PontuacaoController';
 
-const roteador = Router();
-const pontuacao = new PontuacaoController();
+const router = Router();
 
-roteador.get('/', pontuacao.listarTodos.bind(pontuacao));
-roteador.get('/:id', pontuacao.buscarPorId.bind(pontuacao));
-roteador.get('/colaborador/:colaboradorId', pontuacao.buscarPorColaboradorId.bind(pontuacao));
-roteador.get('/ciclo/:cicloId', pontuacao.buscarPorCicloId.bind(pontuacao));
-roteador.get('/total/colaborador/:colaboradorId', pontuacao.calcularTotalPorColaborador.bind(pontuacao));
-roteador.post('/', pontuacao.criar.bind(pontuacao));
-roteador.put('/:id', pontuacao.atualizar.bind(pontuacao));
-roteador.delete('/:id', pontuacao.remover.bind(pontuacao));
+router.post('/', PontuacaoController.create);
+router.get('/', PontuacaoController.findAll);
+router.get('/:id', PontuacaoController.findById);
+router.put('/:id', PontuacaoController.update);
+router.delete('/:id', PontuacaoController.delete);
 
-export default roteador;
+export default router;
