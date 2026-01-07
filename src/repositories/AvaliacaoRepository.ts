@@ -20,8 +20,23 @@ class AvaliacaoRepository {
         return rows[0];
     }
 
-    async findAll(): Promise<Avaliacao[]> {
-        const { rows } = await db.query('SELECT * FROM avaliacao');
+    async findAll(): Promise<any[]> {
+        const query = `
+            SELECT
+                a.id AS avaliacao_id,
+                col.nome AS colaborador_nome,
+                cd.nome AS ciclo_nome,
+                a.status AS avaliacao_status,
+                a.tipo AS avaliacao_tipo,
+                nb.score_final_merito
+            FROM public.avaliacao a
+            JOIN public.ciclo_colaborador cc ON a.ciclo_colaborador_id = cc.id
+            JOIN public.colaborador col ON cc.colaborador_id = col.id
+            JOIN public.ciclo_desempenho cd ON cc.ciclo_id = cd.id
+            LEFT JOIN public.nine_box nb ON cc.id = nb.ciclo_colaborador_id
+            ORDER BY col.nome, cd.data_fim DESC
+        `;
+        const { rows } = await db.query(query);
         return rows;
     }
 

@@ -1,46 +1,52 @@
+import db from '../config/db';
 import { Perfil } from '../types/Perfil';
 
 export class PerfilRepository {
-  private perfis: Perfil[] = [];
-  private nextId = 1;
-
-  listar(): Perfil[] {
-    return this.perfis;
+  async listar(): Promise<Perfil[]> {
+    const { rows } = await db.query('SELECT * FROM perfil ORDER BY id');
+    return rows;
   }
 
-  buscarPorId(id: number): Perfil | undefined {
-    return this.perfis.find(p => p.id === id);
+  async buscarPorId(id: number): Promise<Perfil | undefined> {
+    const { rows } = await db.query('SELECT * FROM perfil WHERE id = $1', [id]);
+    return rows[0];
   }
 
-  criar(perfil: Perfil): Perfil {
-    const novoPerfil = {
-      ...perfil,
-      id: this.nextId++,
-      dataCriacao: new Date()
-    };
-    this.perfis.push(novoPerfil);
-    return novoPerfil;
+  async criar(perfil: Perfil): Promise<Perfil> {
+    const { nome, descricao, permissoes, ativo } = perfil;
+    const { rows } = await db.query(
+      `INSERT INTO perfil (nome, descricao, permissoes, ativo)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [nome, descricao, permissoes, ativo ?? true]
+    );
+    return rows[0];
   }
 
-  atualizar(id: number, perfil: Partial<Perfil>): Perfil | undefined {
-    const index = this.perfis.findIndex(p => p.id === id);
-    if (index !== -1) {
-      this.perfis[index] = {
-        ...this.perfis[index],
-        ...perfil,
-        dataAtualizacao: new Date()
-      };
-      return this.perfis[index];
+  async atualizar(id: number, perfil: Partial<Perfil>): Promise<Perfil | undefined> {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    for (const key of Object.keys(perfil)) {
+      // @ts-ignore
+      const value = perfil[key as keyof Perfil];
+      if (value !== undefined && key !== 'id') {
+        fields.push(`${key} = $${idx}`);
+        values.push(value);
+        idx++;
+      }
     }
-    return undefined;
+
+    if (fields.length === 0) return this.buscarPorId(id);
+
+    values.push(id);
+    const query = `UPDATE perfil SET ${fields.join(', ')}, updated_at = now() WHERE id = $${idx} RETURNING *`;
+    const { rows } = await db.query(query, values);
+    return rows[0];
   }
 
-  remover(id: number): boolean {
-    const index = this.perfis.findIndex(p => p.id === id);
-    if (index !== -1) {
-      this.perfis.splice(index, 1);
-      return true;
-    }
-    return false;
+  async remover(id: number): Promise<boolean> {
+    const { rowCount } = await db.query('DELETE FROM perfil WHERE id = $1', [id]);
+    return (rowCount || 0) > 0;
   }
 }

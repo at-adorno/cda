@@ -53,4 +53,17 @@ export const ColaboradorController = {
       return res.status(500).json({ erro: 'Erro ao remover colaborador' });
     }
   },
+
+  async obterUltimaAvaliacao(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const resultado = await colaboradorService.obterUltimaAvaliacaoENineBox(id);
+      return res.json(resultado);
+    } catch (error: any) {
+      if (error.message === 'AVALIACAO_NAO_ENCONTRADA') {
+        return res.status(404).json({ erro: 'Nenhuma avaliação encontrada para este colaborador.' });
+      }
+      return res.status(500).json({ erro: 'Erro ao obter a última avaliação do colaborador.' });
+    }
+  },
 };

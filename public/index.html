@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Principal - Sistema de Gestão de Desempenho</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .card-description {
+            flex-grow: 1;
+            color: var(--text-muted);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        .card-footer {
+            margin-top: 20px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sistema de Gestão de Desempenho</h1>
+
+        <div class="cards-container">
+            <!-- Card 1: Cadastro de Usuário -->
+            <div class="card">
+                <a href="pages/cadastro-usuario.html">
+                    <h3 class="card-title">Cadastrar Novo Usuário</h3>
+                    <p class="card-description">
+                        Formulário para registrar novos usuários no sistema, definindo nome, email, senha e perfil de acesso.
+                    </p>
+                    <div class="card-footer">
+                        Acessar &rarr;
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 2: Consulta de Avaliação -->
+            <div class="card">
+                <a href="pages/consulta-avaliacao.html">
+                    <h3 class="card-title">Consultar Avaliação Individual</h3>
+                    <p class="card-description">
+                        Pesquise pelo ID de um colaborador para ver sua última avaliação de desempenho e sua posição no Nine Box.
+                    </p>
+                    <div class="card-footer">
+                        Acessar &rarr;
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 3: Relatório de Avaliações -->
+            <div class="card">
+                <a href="pages/relatorio-avaliacoes.html">
+                    <h3 class="card-title">Relatório Geral de Avaliações</h3>
+                    <p class="card-description">
+                        Visualize e filtre uma tabela dinâmica com todas as avaliações de desempenho registradas na plataforma.
+                    </p>
+                    <div class="card-footer">
+                        Acessar &rarr;
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 4: Desempenho do Usuário -->
+            <div class="card">
+                <a href="pages/desempenho-usuario.html">
+                    <h3 class="card-title">Painel de Desempenho</h3>
+                    <p class="card-description">
+                        Painel para visualização do desempenho, metas e competências do usuário logado.
+                    </p>
+                    <div class="card-footer">
+                        Acessar &rarr;
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

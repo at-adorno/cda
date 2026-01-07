@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import perfilRoutes from './routes/perfilRoutes';
 import usuarioRoutes from './routes/usuarioRoutes';
 import cicloColaboradorRoutes from './routes/cicloColaboradorRoutes';
@@ -16,6 +17,8 @@ import gestorRoutes from './routes/gestorRoutes';
 const app = express();
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, '../public')));
+
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/ciclosColaborador', cicloColaboradorRoutes);
 app.use('/api/ciclosDesempenho', cicloDesempenhoRoutes);
@@ -23,12 +26,16 @@ app.use('/api/colaboradores', colaboradorRoutes);
 app.use('/api/competencias', competenciaRoutes);
 app.use('/api/metas', metaRoutes);
 app.use('/api/planoCarreiras', planoCarreiraRoutes);
-app.use('/api/perfil', perfilRoutes);
+app.use('/api/perfis', perfilRoutes);
 app.use('/api/cargos', cargoRoutes);
 app.use('/api/avaliacoes', avaliacaoRoutes);
 app.use('/api/pontuacoes', pontuacaoRoutes);
 app.use('/api/nineBoxes', nineBoxRoutes);
 app.use('/api/gestores', gestorRoutes);
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 

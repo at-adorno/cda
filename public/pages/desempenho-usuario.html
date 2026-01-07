@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Desempenho do Colaborador</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="page-header">Painel de Desempenho</h1>
+
+    <div class="selector-container">
+        <label for="colaborador-selector">Selecione um Colaborador:</label>
+        <select id="colaborador-selector">
+            <option value="">-- Carregando colaboradores... --</option>
+        </select>
+    </div>
+
+    <div id="data-container">
+        <h2 id="nome-colaborador-display" style="text-align: center; color: #555; margin-top: 0; margin-bottom: 40px;"></h2>
+        
+        <div>
+            <h3 class="section-title">Resultado Nine Box</h3>
+            <div id="nine-box-container" class="nine-box-display"></div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h3 class="section-title">Histórico de Avaliações</h3>
+            <div id="avaliacoes-container" class="cards-container"></div>
+        </div>
+    </div>
+</div>
+
+<script src="../js/desempenho-usuario.js"></script>
+
+</body>
+</html>

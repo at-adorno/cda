@@ -2,75 +2,139 @@
 
 > Sistema automatizado para gestão de ciclos de desempenho, avaliações de colaboradores e planejamento de carreira.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![License](https://img.shields.io/badge/license-ISC-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)
+![Versão do Projeto](https://img.shields.io/badge/version-1.0.0-blue)
+![Licença](https://img.shields.io/badge/license-ISC-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12%2B-informational)
 
 ---
 
-## 📋 Sobre o Projeto
+##  sobre o Projeto
 
-O **Ciclo de Desempenho Automatizado (CDA)** é uma plataforma que transforma o processo manual de avaliação de desempenho em um fluxo automatizado e integrado. O sistema permite que gestores, analistas de RH e colaboradores trabalhem de forma sincronizada para:
+O **Ciclo de Desempenho Automatizado (CDA)** é uma plataforma web que transforma o processo manual de avaliação de desempenho em um fluxo de trabalho digital, integrado e eficiente. O sistema foi projetado para que gestores, analistas de RH e colaboradores trabalhem de forma sincronizada e transparente.
 
-- ✅ Automatizar o ciclo de avaliação de desempenho
-- ✅ Calcular mérito e progressão de carreira
-- ✅ Posicionar colaboradores na matriz Nine Box
-- ✅ Gerar relatórios estratégicos de sucessão
-- ✅ Oferecer transparência aos colaboradores sobre seu plano de carreira
+### Principais Funcionalidades
 
-### Problema Resolvido
-
-Antes: Processo manual em planilhas, 30% de divergências, falta de histórico  
-Depois: Sistema integrado, cálculos automatizados, rastreabilidade completa
-
----
-
-## 🎯 Metas de Sucesso (MVP)
-
-- [x] Banco de dados funcionando com todas as tabelas
-- [ ] Pelo menos 7 dos 9 endpoints do gestor implementados
-- [ ] Tela do colaborador exibindo dados reais
-- [ ] Importação de CSV funcional para pelo menos uma entidade
-- [ ] Cálculo de mérito funcionando corretamente
-- [ ] Sistema rodando sem erros críticos
-
----
-
-## 👥 Equipe do Projeto
-
-| Nome | Papel | Responsabilidades |
-|------|-------|-------------------|
-| Wanessa Karen | Modeladora de Dados | Modelagem de BD, DER, scripts SQL |
-| Alessandra Santos | Desenvolvedora de Rotas | Endpoints da API, controllers |
-| Andre Tavares | Lógica de Negócio | Services, regras de negócio |
-| Diciane Alves | Documentação | Swagger, README, manuais |
+- **Gestão de Ciclos de Desempenho**: Crie e gerencie ciclos de avaliação anuais ou de experiência.
+- **Avaliações Flexíveis**: Suporte para autoavaliação e avaliação do gestor.
+- **Matriz Nine Box**: Posicionamento automático de colaboradores na matriz de desempenho vs. potencial.
+- **Cálculo de Mérito**: Lógica para cálculo de pontuações e mérito.
+- **Planos de Carreira**: Estruturação de trilhas de desenvolvimento para os colaboradores.
+- **Painéis e Relatórios**: Visualização de dados de desempenho para gestores e RH.
+- **Gestão de Colaboradores**: Cadastro e gerenciamento de usuários, cargos e perfis.
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
-### Backend
-- **Runtime:** Node.js 18+
-- **Linguagem:** TypeScript 5.9
-- **Framework:** Express.js (em desenvolvimento)
-- **Banco de Dados:** PostgreSQL 12+
+- **Backend**: Node.js, Express.js, TypeScript
+- **Banco de Dados**: PostgreSQL
+- **Frontend**: HTML, CSS, JavaScript (Vanilla)
+- **Gerenciador de Pacotes**: npm
+- **Ambiente de Execução**: ts-node
 
-### Ferramentas de Desenvolvimento
-- **CLI:** ts-node
-- **Versionamento:** Git
-- **Documentação:** Swagger (planejado)
-- **Gerenciamento de Dependências:** npm
+---
 
-### Dependências Principais
-```json
-{
-  "pg": "^8.16.3",
-  "typescript": "^5.9.3",
-  "dotenv": "^17.2.3",
-  "ts-node": "^10.9.2"
-}
+## 🚀 Guia de Instalação e Execução
+
+Siga os passos abaixo para configurar e executar o projeto em seu ambiente local.
+
+### 1. Pré-requisitos
+
+- **Node.js**: Versão 18 ou superior.
+- **npm**: Geralmente instalado junto com o Node.js.
+- **PostgreSQL**: Versão 12 ou superior.
+- **Git**: Para clonar o repositório.
+
+### 2. Clone o Repositório
+
+```bash
+git clone https://github.com/at-adorno/cda.git
+cd cda
 ```
+
+### 3. Instale as Dependências
+
+Este comando instalará todas as dependências do backend listadas no `package.json`.
+
+```bash
+npm install
+```
+
+### 4. Configure as Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto, copiando o exemplo `.env.example` (se existir) ou criando um novo. Este arquivo armazenará suas credenciais de banco de dados de forma segura.
+
+**Exemplo de arquivo `.env`:**
+```dotenv
+# Credenciais do Banco de Dados PostgreSQL
+DB_USER=postgres
+DB_HOST=localhost
+DB_DATABASE=cda_db
+DB_PASSWORD=sua_senha_secreta
+DB_PORT=5432
+```
+> **Aviso**: Certifique-se de que o arquivo `.env` esteja listado no seu `.gitignore` para evitar que segredos sejam enviados ao repositório.
+
+### 5. Configure o Banco de Dados
+
+Você precisará de um cliente PostgreSQL (como `psql` ou DBeaver) para executar os scripts.
+
+**a. Crie o Banco de Dados:**
+Primeiro, crie a base de dados que você configurou no arquivo `.env` (ex: `cda_db`).
+
+```sql
+CREATE DATABASE cda_db;
+```
+
+**b. Crie a Estrutura das Tabelas (DDL):**
+Execute o script `banco.sql` para criar todas as tabelas, tipos e relações.
+
+```bash
+# Exemplo de execução via psql
+psql -U seu_usuario -d cda_db -f src/scripts/banco.sql
+```
+
+**c. Popule o Banco com Dados de Teste (DML):**
+Execute o script `popula_banco.sql` para inserir dados de teste, incluindo 10 usuários, ciclos, avaliações, etc.
+
+```bash
+# Exemplo de execução via psql
+psql -U seu_usuario -d cda_db -f src/scripts/popula_banco.sql
+```
+
+**d. (Opcional) Limpando o Banco de Dados:**
+Se precisar apagar todos os dados para recomeçar, utilize o script `limpar_banco.sql`.
+
+```bash
+# Exemplo de execução via psql
+psql -U seu_usuario -d cda_db -f src/scripts/limpar_banco.sql
+```
+
+### 6. Execute a Aplicação
+
+Com o banco de dados configurado, inicie o servidor da API.
+
+```bash
+npm start
+```
+
+O servidor será iniciado na porta `4000` (ou na porta definida em `process.env.PORT`). Você verá a mensagem: `API server listening on http://localhost:4000`.
+
+### 7. Acesse as Páginas Web
+
+As páginas HTML estão na pasta `public/`. Após iniciar o servidor, você pode acessá-las diretamente pelo navegador. Por exemplo:
+- **Painel de Desempenho**: `http://localhost:4000/pages/desempenho-usuario.html`
+- **Consulta de Avaliação**: `http://localhost:4000/pages/consulta-avaliacao.html`
+
+---
+
+## 📝 Scripts Disponíveis no Projeto
+
+- **`npm start`**: Inicia o servidor da aplicação em modo de desenvolvimento com `ts-node`.
+- **`npm run test-db`**: Executa um script para testar a conexão com o banco de dados.
+- **`npm run check-schema`**: Roda um script que verifica a consistência do esquema do banco.
 
 ---
 
@@ -78,238 +142,44 @@ Depois: Sistema integrado, cálculos automatizados, rastreabilidade completa
 
 ```
 cda/
+├── docs/                      # Documentação do projeto (DER, cronograma, etc.)
+├── public/                    # Arquivos frontend (HTML, CSS, JS)
+│   ├── pages/                 # Páginas HTML da aplicação
+│   └── css/
 ├── src/
-│   ├── index.ts                 # Entrada principal da aplicação
-│   ├── database/
-│   │   └── db.ts               # Configuração da conexão PostgreSQL
-│   ├── repositories/
-│   │   ├── UserRepository.ts    # Acesso a dados de usuários
-│   │   └── PostRepository.ts    # Acesso a dados de posts
-│   └── schema/
-│       └── init.sql            # Script de inicialização do banco
-├── docs/
-│   ├── requisitos.md           # Documento de requisitos funcionais/não-funcionais
-│   ├── DAS_Ciclo_de_Desenvolvimento_Automatizado.md  # Definição de arquitetura
-│   ├── cronograma.md           # Timeline do projeto
-│   └── apoio/                  # Documentos de suporte
-│       ├── diagrama_classes.md
-│       ├── estrutura-pastas.md
-│       ├── guia-instalacao.md
-│       ├── create_database.sql
-│       └── queries_endpoints_gestor.sql
-├── package.json
-├── tsconfig.json
-├── CONTRIBUTING.md             # Guia de contribuição
-└── README.md                   # Este arquivo
+│   ├── app.ts                 # Ponto de entrada e configuração do Express
+│   ├── config/
+│   │   └── db.ts              # Configuração da conexão com o PostgreSQL
+│   ├── controllers/           # Camada de controle (recebe requisições HTTP)
+│   ├── repositories/          # Camada de acesso a dados (queries SQL)
+│   ├── routes/                # Definição das rotas da API
+│   ├── services/              # Camada de regras de negócio
+│   ├── scripts/               # Scripts utilitários de banco de dados
+│   │   ├── banco.sql          # (DDL) Criação da estrutura do banco
+│   │   ├── popula_banco.sql   # (DML) Inserção de dados para teste
+│   │   └── limpar_banco.sql   # (DML) Script para apagar todos os dados
+│   └── types/                 # Definições de tipos e interfaces TypeScript
+├── .env                       # Arquivo de variáveis de ambiente (local)
+├── package.json               # Dependências e scripts do projeto
+├── tsconfig.json              # Configurações do compilador TypeScript
+└── README.md                  # Este arquivo
 ```
 
 ---
 
-## 🚀 Quick Start
+## 📚 Documentação da API
 
-### Pré-requisitos
-
-- Node.js 18 ou superior
-- npm ou yarn
-- PostgreSQL 12+
-- Git
-
-### Instalação
-
-1. **Clone o repositório:**
-   ```bash
-   git clone https://github.com/at-adorno/cda.git
-   cd cda
-   ```
-
-2. **Instale as dependências:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure variáveis de ambiente:**
-   ```bash
-   cp .env.example .env
-   # Edite o arquivo .env com suas credenciais do PostgreSQL
-   ```
-
-4. **Execute a aplicação:**
-   ```bash
-   npm start
-   ```
-
-A aplicação iniciará em modo interativo com um menu de opções.
+A API é o núcleo do sistema, servindo os dados para as páginas web. Os endpoints RESTful seguem os padrões de mercado. Para uma lista completa de endpoints disponíveis, consulte o arquivo:
+[**docs/apoio/endpoints_completos.md**](./docs/apoio/endpoints_completos.md)
 
 ---
 
-## 📝 Scripts Disponíveis
+## 🤝 Contribuindo
 
-```bash
-# Iniciar a aplicação
-npm start
-
-# Rodar testes (não configurado)
-npm test
-```
-
-### Testar Conexão com o Banco
-
-Um script utilitário foi adicionado para verificar rapidamente a conexão com o PostgreSQL usando o pool definido em `src/config/db.ts`.
-
-- **Comando:**
-
-```bash
-npm run test-db
-```
-
-- **O que ele faz:**
-   - Lê variáveis em `.env` (veja abaixo).
-   - Imprime as variáveis de conexão (senha oculta por padrão).
-   - Executa `SELECT NOW()` para validar a conexão e encerra o pool.
-
-- **Mostrar senha (apenas para debug):**
-
-```bash
-SHOW_DB_PASSWORD=1 npm run test-db
-```
-
-- **Variáveis necessárias no `.env`:**
-
-```dotenv
-# Exemplo mínimo (.env)
-DB_USER=seu_usuario
-DB_HOST=seu_host_do_postgres
-DB_DATABASE=seu_banco
-DB_PASSWORD=sua_senha
-DB_PORT=5432
-```
-
-- **Observações de segurança:**
-   - Não comite o arquivo `.env` no repositório. Adicione-o ao `.gitignore` se ainda não estiver.
-   - Use `DATABASE_URL` em serviços/CI quando suportado, mas evite expor segredos em logs.
-
-
----
-
-## 💾 Banco de Dados
-
-### Inicialização
-
-O banco de dados é inicializado automaticamente ao executar a aplicação através do arquivo `src/schema/init.sql`.
-
-### Conectar ao PostgreSQL
-
-```bash
-psql -U seu_usuario -d cda
-```
-
-### Arquivo de Setup
-
-Consulte `docs/apoio/create_database.sql` para criação manual do banco.
-
----
-
-## 🏗️ Arquitetura
-
-### Padrão Repository
-
-A aplicação utiliza o padrão **Repository** para abstração da camada de dados:
-
-```
-UserRepository → Queries SQL → PostgreSQL
-PostRepository → Queries SQL → PostgreSQL
-```
-
-### Componentes Principais
-
-- **`index.ts`**: Menu interativo e orquestração
-- **`repositories/`**: Acesso a dados (queries)
-- **`database/db.ts`**: Pool de conexões PostgreSQL
-
----
-
-## 📚 Requisitos do Projeto
-
-### Requisitos Funcionais Principais
-
-1. **Gestão de Ciclo e Onboarding**
-   - Manutenção de ciclos de desempenho (CRUD)
-   - Cadastro de colaboradores
-   - Validação de preenchimento mínimo
-
-2. **Cálculo e Progressão Automatizada**
-   - Cálculo automático de mérito
-   - Posicionamento na matriz Nine Box
-   - Identificação de elegibilidade para plano de carreira
-
-3. **Painéis e Relatórios**
-   - Painel de acompanhamento para gestores
-   - Relatórios de sucessão estratégica para RH
-
-4. **Experiência do Colaborador**
-   - Acesso a feedback e performance (web responsivo)
-   - Visualização do plano de carreira
-
-5. **Administração de Sistemas**
-   - Gestão de perfis de usuário
-   - Controle de permissões
-
-Veja `docs/requisitos.md` para detalhes completos.
-
----
-
-## 🔒 Segurança e Conformidade
-
-- ✅ Conformidade com LGPD (Lei Geral de Proteção de Dados)
-- ✅ Dados sensíveis com criptografia AES-256 em repouso
-- ✅ TLS 1.2+ em trânsito
-- ⚠️ Nunca faça commit de `.env` ou senhas
-- ✅ Use `.env.example` como referência
-
----
-
-## 📖 Contribuindo
-
-Este projeto segue um fluxo de trabalho colaborativo estruturado.
-
-**Leia [CONTRIBUTING.md](./CONTRIBUTING.md) para:**
-- Processo de branches (`feature/`, `fix/`, `docs/`)
-- Padrão de commits em português
-- Processo de Pull Requests
-- Code Style com TypeScript e Prettier
-- Estrutura de pastas e convenção de nomes
-
----
-
-## 📅 Timeline e Documentação
-
-- **Cronograma do Projeto:** [docs/cronograma.md](./docs/cronograma.md)
-- **Documentação de Arquitetura:** [docs/DAS_Ciclo_de_Desenvolvimento_Automatizado.md](./docs/DAS_Ciclo_de_Desenvolvimento_Automatizado.md)
-- **Guia de Instalação:** [docs/apoio/guia-instalacao.md](./docs/apoio/guia-instalacao.md)
-
----
-
-## 📞 Suporte e Dúvidas
-
-- 📧 Abra uma **Issue** no GitHub
-- 💬 Utilize o grupo do WhatsApp ou Discord
-- 📋 Registre pendências como Issues no repositório
+Contribuições são bem-vindas! Este projeto segue um fluxo de trabalho estruturado. Para mais detalhes sobre como contribuir, padrões de commit e processo de Pull Request, leia o nosso **[GUIA DE CONTRIBUIÇÃO](./CONTRIBUTING.md)**.
 
 ---
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a **ISC License** - veja o arquivo `package.json` para detalhes.
-
----
-
-## 🎓 Referências
-
-- [LGPD - Lei Geral de Proteção de Dados](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)
-- [Documentação PostgreSQL](https://www.postgresql.org/docs/)
-- [Documentação TypeScript](https://www.typescriptlang.org/docs/)
-- [Node.js Best Practices](https://nodejs.org/en/docs/guides/)
-
----
-
-**Bom trabalho e boas contribuições! 🚀**
+Este projeto está licenciado sob a **ISC License**. Veja o `package.json` para mais detalhes.

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Avaliações - Sistema de Desempenho</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Relatório de Avaliações</h1>
+
+        <div class="table-container">
+            <div class="filter-container">
+                <input type="text" id="filtro-nome" placeholder="Filtrar por nome do colaborador...">
+            </div>
+
+            <p id="loading-message">Carregando dados das avaliações...</p>
+            <p id="error-message" style="display: none;"></p>
+
+            <table class="table" id="avaliacoes-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Colaborador</th>
+                        <th>Ciclo</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Pontuação Final</th>
+                    </tr>
+                </thead>
+                <tbody id="avaliacoes-tbody">
+                    <!-- Linhas da tabela serão inseridas aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../js/relatorio-avaliacoes.js"></script>
+
+</body>
+</html>

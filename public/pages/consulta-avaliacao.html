@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Última Avaliação - Sistema de Desempenho</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="layout-start">
+
+    <div class="main-container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Consultar Última Avaliação do Colaborador</h2>
+            </div>
+            <div class="card-body">
+                <form id="consulta-form">
+                    <div class="form-group">
+                        <label for="colaborador_id">Buscar por ID do Colaborador</label>
+                        <input type="number" id="colaborador_id" name="colaborador_id" class="form-control" required min="1" placeholder="Ex: 101">
+                        <small style="display: block; margin-top: 5px; color: #777;">Insira o ID do colaborador para ver sua última avaliação completa.</small>
+                    </div>
+                    <button type="submit" class="btn">Consultar</button>
+                </form>
+                <div id="message" class="message"></div>
+            </div>
+        </div>
+
+        <div id="results-container">
+            <div class="result-item" style="margin-bottom: 20px; text-align: center; background-color: var(--primary-color);">
+                <h3 id="colaborador_nome" style="color: white; margin: 0;">-</h3>
+            </div>
+
+            <h3 class="section-title">Resultados da Última Avaliação</h3>
+            <div class="card">
+                <div class="card-body">
+                     <div class="result-grid">
+                        <div class="result-item">
+                            <h4>Ciclo de Avaliação</h4>
+                            <p id="ciclo_nome">-</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>Período do Ciclo</h4>
+                            <p id="ciclo_periodo">-</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>Status da Avaliação</h4>
+                            <p id="avaliacao_status">-</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>Tipo de Avaliação</h4>
+                            <p id="avaliacao_tipo">-</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>Posição no Nine Box</h4>
+                            <p id="nine_box_posicao">-</p>
+                        </div>
+                         <div class="result-item">
+                            <h4>Score Final (Mérito)</h4>
+                            <p id="score_final_merito">-</p>
+                        </div>
+                        <div class="result-item" style="grid-column: 1 / -1;">
+                            <h4>Comentário da Avaliação</h4>
+                            <p id="avaliacao_comentario">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="btn-ver-detalhes" class="btn" style="display: none; max-width: 300px; margin: 0 auto;">Ver Detalhes das Pontuações</button>
+            </div>
+
+            <div id="detalhes-pontuacoes" class="card" style="margin-top: 20px; display: none;">
+                <div class="card-header">
+                    <h3>Detalhamento das Pontuações</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item Avaliado</th>
+                                <th>Nota</th>
+                                <th>Comentário</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-pontuacoes">
+                            <!-- Items -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/consulta-avaliacao.js"></script>
+
+</body>
+</html>
