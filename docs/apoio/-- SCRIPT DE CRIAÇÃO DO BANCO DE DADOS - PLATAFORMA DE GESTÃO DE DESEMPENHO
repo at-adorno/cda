@@ -29,7 +29,7 @@ CREATE TABLE public.usuario (
     email character varying NOT NULL UNIQUE,
     nome character varying,
     perfil_id BIGINT NOT NULL, -- FK para PERFIL
-    senha_hash text,
+    senha text,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
     CONSTRAINT usuario_pkey PRIMARY KEY (id),
