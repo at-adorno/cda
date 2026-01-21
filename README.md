@@ -10,7 +10,7 @@
 
 ---
 
-##  sobre o Projeto
+##  Sobre o Projeto
 
 O **Ciclo de Desempenho Automatizado (CDA)** é uma plataforma web que transforma o processo manual de avaliação de desempenho em um fluxo de trabalho digital, integrado e eficiente. O sistema foi projetado para que gestores, analistas de RH e colaboradores trabalhem de forma sincronizada e transparente.
 
@@ -64,7 +64,7 @@ npm install
 
 ### 4. Configure as Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto, copiando o exemplo `.env.example` (se existir) ou criando um novo. Este arquivo armazenará suas credenciais de banco de dados de forma segura.
+Crie um arquivo `.env` na raiz do projeto. Este arquivo armazenará suas credenciais de banco de dados de forma segura.
 
 **Exemplo de arquivo `.env`:**
 ```dotenv
@@ -125,14 +125,18 @@ O servidor será iniciado na porta `4000` (ou na porta definida em `process.env.
 ### 7. Acesse as Páginas Web
 
 As páginas HTML estão na pasta `public/`. Após iniciar o servidor, você pode acessá-las diretamente pelo navegador. Por exemplo:
-- **Painel de Desempenho**: `http://localhost:4000/pages/desempenho-usuario.html`
+- **Página Inicial**: `http://localhost:4000/`
+- **Cadastro de Usuário**: `http://localhost:4000/pages/cadastro-usuario.html`
 - **Consulta de Avaliação**: `http://localhost:4000/pages/consulta-avaliacao.html`
+- **Painel de Desempenho**: `http://localhost:4000/pages/desempenho-usuario.html`
+- **Relatório de Avaliações**: `http://localhost:4000/pages/relatorio-avaliacoes.html`
 
 ---
 
 ## 📝 Scripts Disponíveis no Projeto
 
-- **`npm start`**: Inicia o servidor da aplicação em modo de desenvolvimento com `ts-node`.
+- **`npm start`**: Inicia o servidor da aplicação em modo de desenvolvimento com `ts-node-dev`.
+- **`npm run build`**: Compila o código TypeScript para JavaScript.
 - **`npm run test-db`**: Executa um script para testar a conexão com o banco de dados.
 - **`npm run check-schema`**: Roda um script que verifica a consistência do esquema do banco.
 
@@ -142,34 +146,128 @@ As páginas HTML estão na pasta `public/`. Após iniciar o servidor, você pode
 
 ```
 cda/
-├── docs/                      # Documentação do projeto (DER, cronograma, etc.)
-├── public/                    # Arquivos frontend (HTML, CSS, JS)
-│   ├── pages/                 # Páginas HTML da aplicação
-│   └── css/
-├── src/
-│   ├── app.ts                 # Ponto de entrada e configuração do Express
-│   ├── config/
-│   │   └── db.ts              # Configuração da conexão com o PostgreSQL
-│   ├── controllers/           # Camada de controle (recebe requisições HTTP)
-│   ├── repositories/          # Camada de acesso a dados (queries SQL)
-│   ├── routes/                # Definição das rotas da API
-│   ├── services/              # Camada de regras de negócio
-│   ├── scripts/               # Scripts utilitários de banco de dados
-│   │   ├── banco.sql          # (DDL) Criação da estrutura do banco
-│   │   ├── popula_banco.sql   # (DML) Inserção de dados para teste
-│   │   └── limpar_banco.sql   # (DML) Script para apagar todos os dados
-│   └── types/                 # Definições de tipos e interfaces TypeScript
-├── .env                       # Arquivo de variáveis de ambiente (local)
-├── package.json               # Dependências e scripts do projeto
-├── tsconfig.json              # Configurações do compilador TypeScript
-└── README.md                  # Este arquivo
+├── .env
+├── CONTRIBUTING.md
+├── package-lock.json
+├── package.json
+├── README.md
+├── tsconfig.json
+├── docs/
+│   ├── apoio/
+│   ├── api.md
+│   ├── casos_de_uso.png
+│   ├── cronograma.md
+│   ├── DAS_Ciclo_de_Desenvolvimento_Automatizado.md
+│   ├── Diagrama der
+│   ├── requisitos.md
+│   └── Sistema-de-Ciclo-de-Desempenho-Automatizado.pdf
+├── public/
+│   ├── index.html
+│   ├── css/
+│   │   └── styles.css
+│   ├── js/
+│   │   ├── cadastro-usuario.js
+│   │   ├── consulta-avaliacao.js
+│   │   ├── desempenho-usuario.js
+│   │   └── relatorio-avaliacoes.js
+│   └── pages/
+│       ├── cadastro-usuario.html
+│       ├── consulta-avaliacao.html
+│       ├── desempenho-usuario.html
+│       └── relatorio-avaliacoes.html
+└── src/
+    ├── app.ts
+    ├── config/
+    │   └── db.ts
+    ├── controllers/
+    │   ├── AvaliacaoController.ts
+    │   ├── CargoController.ts
+    │   ├── CicloColaboradorController.ts
+    │   ├── CicloDesempenhoController.ts
+    │   ├── ColaboradorController.ts
+    │   ├── CompetenciaController.ts
+    │   ├── GestorController.ts
+    │   ├── MetaController.ts
+    │   ├── NineBoxController.ts
+    │   ├── PerfilController.ts
+    │   ├── PlanoCarreiraController.ts
+    │   ├── PontuacaoController.ts
+    │   └── UsuarioController.ts
+    ├── repositories/
+    │   ├── AvaliacaoRepository.ts
+    │   ├── CargoRepository.ts
+    │   ├── CicloColaboradorRepository.ts
+    │   ├── CicloDesempenhoRepository.ts
+    │   ├── ColaboradorRepository.ts
+    │   ├── CompetenciaRepository.ts
+    │   ├── GestorRepository.ts
+    │   ├── MetaRepository.ts
+    │   ├── NineBoxRepository.ts
+    │   ├── PerfilRepository.ts
+    │   ├── PlanoCarreiraRepository.ts
+    │   ├── PontuacaoRepository.ts
+    │   └── UsuarioRepository.ts
+    ├── routes/
+    │   ├── avaliacaoRoute.ts
+    │   ├── cargoRoute.ts
+    │   ├── cicloColaboradorRoutes.ts
+    │   ├── cicloDesempenhoRoutes.ts
+    │   ├── colaboradorRoutes.ts
+    │   ├── competenciaRoutes.ts
+    │   ├── gestorRoutes.ts
+    │   ├── metaRoutes.ts
+    │   ├── nineBoxRoutes.ts
+    │   ├── perfilRoutes.ts
+    │   ├── planoCarreiraRoutes.ts
+    │   ├── pontuacaoRoutes.ts
+    │   └── usuarioRoutes.ts
+    ├── scripts/
+    │   ├── banco.sql
+    │   ├── check-schema.ts
+    │   ├── limpar_banco.sql
+    │   ├── popula_banco.sql
+    │   └── test-db-connection.ts
+    ├── services/
+    │   ├── AvaliacaoService.ts
+    │   ├── CargoService.ts
+    │   ├── CicloColaboradorService.ts
+    │   ├── CicloDesempenhoService.ts
+    │   ├── ColaboradorService.ts
+    │   ├── CompetenciaService.ts
+    │   ├── GestorService.ts
+    │   ├── MetaService.ts
+    │   ├── NineBoxService.ts
+    │   ├── PerfilService.ts
+    │   ├── PlanoCarreiraService.ts
+    │   ├── PontuacaoService.ts
+    │   └── UsuarioService.ts
+    └── types/
+        ├── Avaliacao.ts
+        ├── Cargo.ts
+        ├── CicloColaborador.ts
+        ├── CicloDesempenho.ts
+        ├── Colaborador.ts
+        ├── Competencia.ts
+        ├── Gestor.ts
+        ├── Meta.ts
+        ├── NineBox.ts
+        ├── Perfil.ts
+        ├── PlanoCarreira.ts
+        ├── Pontuacao.ts
+        ├── shims-js.d.ts
+        └── Usuario.ts
 ```
 
 ---
 
-## 📚 Documentação da API
+## 📚 Rotas da API
 
-A API é o núcleo do sistema, servindo os dados para as páginas web. Os endpoints RESTful seguem os padrões de mercado. Para uma lista completa de endpoints disponíveis, consulte o arquivo:
+A API é o núcleo do sistema, servindo os dados para as páginas web. Os endpoints RESTful seguem os padrões de mercado.
+
+Para uma documentação detalhada da API, incluindo exemplos de requisição e resposta, consulte o arquivo:
+[**docs/api.md**](./docs/api.md)
+
+Para uma lista completa de endpoints disponíveis, consulte o arquivo:
 [**docs/apoio/endpoints_completos.md**](./docs/apoio/endpoints_completos.md)
 
 ---
