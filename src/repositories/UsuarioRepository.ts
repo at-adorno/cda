@@ -18,9 +18,9 @@ export const usuarioRepository = {
   },
 
   async criar(dados: Usuario): Promise<Usuario> {
-    const { email, nome, perfil_id, senha } = dados;
+    const { email, nome, perfil_id, senha_hash } = dados;
     const { rows } = await db.query(
-      `INSERT INTO usuario (email, nome, perfil_id, senha) 
+      `INSERT INTO usuario (email, nome, perfil_id, senha_hash) 
        VALUES ($1, $2, $3, $4) RETURNING *`,
       [email, nome ?? null, perfil_id, senha_hash ?? null]
     );
@@ -35,13 +35,13 @@ export const usuarioRepository = {
       email: dados.email ?? usuarioExistente.email,
       nome: dados.nome ?? usuarioExistente.nome,
       perfil_id: dados.perfil_id ?? usuarioExistente.perfil_id,
-      senha: dados.senha ?? usuarioExistente.senha,
+      senha_hash: dados.senha_hash ?? usuarioExistente.senha_hash,
     };
 
     const { rows } = await db.query(
-      `UPDATE usuario SET email=$1, nome=$2, perfil_id=$3, senha=$4, updated_at=now() 
+      `UPDATE usuario SET email=$1, nome=$2, perfil_id=$3, senha_hash=$4, updated_at=now() 
        WHERE id=$5 RETURNING *`,
-      [updated.email, updated.nome, updated.perfil_id, updated.senha, id]
+      [updated.email, updated.nome, updated.perfil_id, updated.senha_hash, id]
     );
     return rows[0];
   },
